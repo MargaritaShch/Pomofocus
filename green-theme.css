@@ -1,0 +1,16 @@
+#theme.green-theme {
+    background-color: rgb(56, 133, 138);
+  }
+  
+#theme.green-theme .btn {
+    color: rgb(56, 133, 138);
+}
+  
+#theme.green-theme .green-btn {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+  
+#theme.green-theme .blue-btn,
+#theme.green-theme .red-btn {
+    background-color: rgb(56, 133, 138, 0);
+}

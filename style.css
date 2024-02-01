@@ -3,14 +3,12 @@
     padding: 0;
 }
 
-body{
+#theme{
     background: rgb(186, 73, 73);
     color: white;
-}
-
-.container{
     font-family: Arial, Helvetica, sans-serif
 }
+
 
 .main-title{
     display: flex;
@@ -89,7 +87,9 @@ body{
     text-align: center; 
     font-size: 18px;
 }
-
+.red-btn{
+    background-color: rgba(0, 0, 0, 0.15);
+}
 .write-task{
     display: flex;
     justify-content: space-between;
@@ -149,3 +149,25 @@ body{
     font-weight: bold;
     color: rgba(255, 255, 255, 0.372);
 }
+
+.task-container{
+   
+}
+.table-task{
+    display: grid;
+    margin: auto;
+    width: 550px;
+    height: 250px;
+    background: rgba(255, 255, 255, 0.972);
+}
+
+
+.est-pomodoros{
+    color: black;
+}
+
+.count-pomodoros{
+    width: 50px;
+    height: 40px;
+}
+

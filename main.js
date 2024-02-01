@@ -1,39 +1,68 @@
 //themеs
 const body = document.querySelector("body");
 const startBtn = document.querySelector('.btn');
-const redButton = document.querySelector(".red-theme");
-const greenButton = document.querySelector(".green-theme");
-const blueButton = document.querySelector(".blue-theme");
+const redButton = document.querySelector(".red-btn");
+const greenButton = document.querySelector(".green-btn");
+const blueButton = document.querySelector(".blue-btn");
 const minute = document.getElementById('min');
 const second = document.getElementById('sec')
+const addTask = document.querySelector("write-task")
+const taskContainer = document.querySelector('.task-container');
+const addTaskButton = document.querySelector('.add-task');
+//сщхранение темы
+const theme = localStorage.getItem("theme");
+//сохранение минут
+const savedMinute = localStorage.getItem("savedMinute");
+//если есть тема
+if(theme){
+    //добавляем этот класс к body
+    body.classList.add(theme)
+}
+
+if (savedMinute) {
+    minute.innerHTML = savedMinute;
+}
 
 redButton.addEventListener('click', function(){
-    body.style.backgroundColor = 'rgb(186, 73, 73)';
-    startBtn.style.color ='rgb(186, 73, 73)';
-    redButton.style.backgroundColor ='rgba(0, 0, 0, 0.15)';
-    greenButton.style.backgroundColor ='rgb(186, 73, 73,0)';
-    blueButton.style.backgroundColor = 'rgb(186, 73, 73,0)';
-    minute.textContent = '25'
+    //удаляем класс
+    body.className = ""
+    //устанавливаем время для данной темы
+    minute.innerHTML ='25'
+    //добавление/удаление темы 
+    body.classList.toggle("red-theme");
+    //усатновка новой темы в харанилище
+    if(theme === "red-theme"){
+        localStorage.setItem("theme", "")
+    } else{
+        localStorage.setItem("theme","red-theme")
+        localStorage.setItem("savedMinute", minute.innerHTML);
+    }
+   
 });
 
-greenButton.addEventListener('click', function(){
-    const body = document.querySelector("body");
-    body.style.backgroundColor = 'rgb(56, 133, 138)';
-    startBtn.style.color ='rgb(56, 133, 138)';
-    greenButton.style.backgroundColor ='rgba(0, 0, 0, 0.15)';
-    redButton.style.backgroundColor ='rgb(56, 133, 138, 0)';
-    blueButton.style.backgroundColor = 'rgb(56, 133, 138, 0)';
-    minute.textContent = '05'
+greenButton.addEventListener("click", function(){
+    body.className = "";
+    minute.innerHTML ='05'
+    body.classList.toggle("green-theme")
+    if(theme === "green-theme"){
+        localStorage.setItem("theme", "")
+    } else{
+        localStorage.setItem("theme","green-theme")
+        localStorage.setItem("savedMinute", minute.innerHTML);
+    }
+    
 });
 
 blueButton.addEventListener('click', function(){
-    const body = document.querySelector("body");
-    body.style.backgroundColor = 'rgb(57, 112, 151)';
-    startBtn.style.color ='rgb(57, 112, 151)';
-    blueButton.style.backgroundColor = 'rgba(0, 0, 0, 0.15)';
-    greenButton.style.backgroundColor ='rgb(57, 112, 151, 0)';
-    redButton.style.backgroundColor ='rgb(57, 112, 151, 0)';
-    minute.textContent = '15';
+    body.className = "";
+    minute.innerHTML ='15'
+    body.classList.toggle("blue-theme")
+    if(theme === "blue-theme"){
+        localStorage.setItem("theme", "")
+    } else{
+        localStorage.setItem("theme","blue-theme")
+        localStorage.setItem("savedMinute", minute.innerHTML);
+    }
 });
 
 //кол-во минут
@@ -77,3 +106,46 @@ startBtn.addEventListener("click",function(){
     //таймер запущен
         started = true
 })
+
+//при нажатии на add task открывать  createTableForTask()
+addTaskButton.addEventListener("click", function(){
+    const newDiv = createTableForTask();
+    taskContainer.appendChild(newDiv)
+    addTaskButton.remove()
+})
+//элемент для добавления задачи
+function createTableForTask(){
+    const div = document.createElement("div");
+    div.classList.add('table-task');
+
+    const input = document.createElement("input");
+    
+    const inputCount = document.createElement("input")
+    inputCount.classList.add("count-pomodoros");
+
+    const span = document.createElement("span");
+    span.classList.add("est-pomodoros")
+    span.textContent = "Est Pomodoros";
+
+    const buttonUp = document.createElement("button")
+    buttonUp.classList.add("up-btn");
+
+    const buttonDown = document.createElement("button")
+    buttonDown.classList.add("down-btn");
+
+    const buttonCancel = document.createElement("button")
+    buttonCancel.classList.add("cancel-btn");
+
+    const buttonSave = document.createElement("button")
+    buttonSave.classList.add("save-btn");
+
+    div.appendChild(input);
+    div.appendChild(inputCount);
+    div.appendChild(span);
+    div.appendChild(buttonUp);
+    div.appendChild(buttonDown);
+    div.appendChild(buttonCancel);
+    div.appendChild(buttonSave);
+
+    return div;
+}

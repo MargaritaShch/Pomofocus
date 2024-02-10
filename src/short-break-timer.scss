@@ -1,17 +1,17 @@
 #theme{
-    &.green-theme {
+    &.short-break-timer-btn {
         background-color: rgb(56, 133, 138);
     
         .start-btn {
             color: rgb(56, 133, 138);
         }
     
-        .green-btn {
+        .short-break-timer-btn {
             background-color: rgba(0, 0, 0, 0.15);
         }
     
-        .blue-btn,
-        .red-btn {
+        .pomodoro-timer-btn,
+        .long-break-timer-btn {
             background-color: rgb(56, 133, 138, 0);
         }
     }

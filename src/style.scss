@@ -4,7 +4,7 @@
 }
 
 #theme {
-  // background: rgb(186, 73, 73);
+  background-color: rgb(186, 73, 73);
   color: white;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -66,7 +66,9 @@
   background-color: white;
   transition: color 0.5s ease-in-out 0s;
   min-height: 55px;
+
 }
+  
 
 .number-task {
   padding-top: 20px;
@@ -325,13 +327,16 @@
   }
   .delete-task{
     cursor: pointer;
-    background-color: white;
-    width: 60px;
-    border: 0.5px solid rgba(128, 128, 128, 0.492);
-    height: 28px;
-    border-radius: 5px;
+    color: white;
+    background-color: rgb(72, 71, 71);
+    border: none;
+    margin-right: 20px;
     font-size: 15px;
     margin-top: 10px;
+    width: 70px;
+    height: 34px;
+    border-radius: 5px;
+    font-size: 15px;
   
   }
 }

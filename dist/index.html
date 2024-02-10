@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.scss">
-    <link rel="stylesheet" href="green-theme.scss">
-    <link rel="stylesheet" href="blue-theme.scss">
-    <link rel="stylesheet" href="red-theme.scss">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="pomodoro-timer.css">
+    <link rel="stylesheet" href="short-break-timer.css">
+    <link rel="stylesheet" href="long-break-timer.css">
+    
     <title>Document</title>
 <script defer src="bundle.js"></script></head>
 <body id ="theme">
@@ -18,14 +19,14 @@
 
         <div class="table">
             <div class = "option">
-                <button class="red-btn">Pomodoro</button>
-                <button class="green-btn">Short Break</button>
-                <button class="blue-btn">Long Break</button>
+                <button class="pomodoro-timer-btn">Pomodoro</button>
+                <button class="short-break-timer-btn">Short Break</button>
+                <button class="long-break-timer-btn">Long Break</button>
             </div>
             <div class="time">
                 <span id ='min'>25</span>:<span id ='sec'>00</span>
             </div>
-            <button class="btn">START</button>
+            <button class="start-btn">START</button>
         </div>
 
         <div class ="tt-focus">Time to focus!</div>
@@ -33,36 +34,23 @@
         <div class="todo-list">
             <div class="write-task">
                 <span>Tasks</span>
-                <!-- <img src="IMG/threedots-white.png" alt="">   -->
+                <button class="three-dots"></button>
             </div>
             <div class="add-text">
                 <hr>
             </div>
 
             <div class="add-task">
-                <!-- <img src="IMG/plus-circle-white.png" alt="plus"> -->
                <span>Add Task</span> 
             </div>
 
-            <div class ="task-container">
-                <input type="text" placeholder="What are you working on?"  class="input-task"> 
-                <span class="est-pomodoros">Est Pomodoros</span>
-                <div>
-                    <input type="number" placeholder="1" class="count-pomodoros"> 
-                    <button class="plus-btn">PLUS</button>
-                    <button  class="minus-btn">MIBUS</button>
-                </div>
-                <div>
-                    <button>Cancel</button>
-                    <button>Save</button>
-                </div>
-            </div>
+            
 
         </div>
     </div>
 
     
     <script src="main.js"></script>
-    <script src="bundle.js"></script>
+    <!-- <script src="bundle.js"></script> -->
 </body>
 </html>

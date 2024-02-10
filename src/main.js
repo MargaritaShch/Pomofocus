@@ -1,106 +1,126 @@
 import "./style.scss";
-import "./green-theme.scss";
-import "./blue-theme.scss";
-import "./red-theme.scss";
-// const addTask = document.querySelector("write-task");
-// const theme = localStorage.getItem("theme");
-// const savedMinute = localStorage.getItem("savedMinute");
+import "./pomodoro-timer.scss";
+import "./short-break-timer.scss";
+import "./long-break-timer.scss";
+
 
 document.addEventListener('DOMContentLoaded', function(){
     //переключение темы
     const addTaskButton = document.querySelector(".add-task");
     const todoList = document.querySelector(".todo-list");
     const body = document.querySelector("body");
-    const redButton = document.querySelector(".red-btn");
-    const greenButton = document.querySelector(".green-btn");
-    const blueButton = document.querySelector(".blue-btn");
-    const minute = document.getElementById("min");
-    const second = document.getElementById("sec");
+    const pomodoroButton = document.querySelector(".pomodoro-timer-btn");
+    const shortBreakButton = document.querySelector(".short-break-timer-btn");
+    const longBreakButton = document.querySelector(".long-break-timer-btn");
+    const minuteId = "min";
+    const secondId = "sec";
     const startBtn = document.querySelector(".start-btn");
-
-    //СМЕНА ТЕМЫ
-    let theme = [
-        {name: "Pomodoro",
-        time: 25,
-        color: "red-theme"},
-
-        {name: "Short Break",
-        time: 5,
-        color: "green-theme"},
-
-        {name:"Long Break",
-        time: 15,
-        color: "blue-theme"},
-    ]
-
-   //текущий индекс темы
-   let currentTheme = 0;
-
-   //смена цвета
-   function changeColor(currentTheme){
-    body.classList.remove("red-theme", "green-theme", "blue-theme")
-    if(currentTheme === 0){
-        body.classList.add(theme[0].color)
-    } else if(currentTheme === 1){
-        body.classList.add(theme[1].color)
-    } else if(currentTheme === 2){
-        body.classList.add(theme[2].color)
-    }
-   }
-
-   function findIndex(index){
-    // stopTimer()
-    currentTheme = index;
-    minute.textContent = theme[currentTheme].time
-    second.textContent = "00"
-    changeColor(currentTheme)
-   }
-
-   redButton.addEventListener("click", function(){
-    findIndex(0)
-   })
-   greenButton.addEventListener("click",function(){
-    findIndex(1)
-   })
-
-   blueButton.addEventListener("click", function(){
-    findIndex(2)
-   })
+    //control timer
+    let timerInterval;
     
-   //ТАЙМЕР
-   function timer(){
-        let min = parseInt(minute.textContent)
-        let sec = parseInt(second.textContent)
+    //obj with settings of breaks
+    const CONFIG = {
+        POMODORO: {
+          time: 25,
+          class: 'pomodoro-timer',
+        },
+        SHORT_BREAK: {
+          time: 5,
+          class: 'short-break-timer',
+        },
+        LONG_BREAK: {
+          time: 15,
+          class: 'long-break-timer',
+        },
+      };
 
-        let timerId = setInterval(() => {
-            sec--
-            if(sec < 0){
-                min = min - 1
-                if(min<0){
-                    clearInterval(timerId)
-                    return
-                }
-                sec =59 
-            }
-            minute.textContent = (min < 10 ? "0" + min : min);
-            second.textContent = (sec < 10 ? "0" + sec : sec)
-        }, 1000); 
-   }
 
-//    let started = true;
-//     //хранение интервала времени
-//     let timerInterval;
+   //change color on breaks
+   function changeColor(themeClass) {
+    body.classList.remove('pomodoro-timer', 'short-break-timer', 'long-break-timer');
+    body.classList.add(themeClass);
+}
+   //сchange breaks
+   function findIndex(key){
+        let min = document.getElementById("min");
+        let sec = document.getElementById("sec");
+        key = CONFIG[key];
+        min.textContent = key.time.toString().padStart(2, "0");
+        sec.textContent = "00";
+        changeColor(key.class)
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
 
-//     function stopTimer(){
-//         clearInterval(timerInterval)
-//         started = false
-//     }
-    startBtn.addEventListener("click",function(){
-
-        timer()
+    //click Pomodoro
+    pomodoroButton.addEventListener("click", function(){
+        findIndex("POMODORO")
+        // changeColor(CONFIG.POMODORO);
     })
+    //click Short Break
+    shortBreakButton.addEventListener("click",function(){
+        findIndex("SHORT_BREAK")
+        // changeColor(CONFIG.SHORT_BREAK);
+    })
+    //click Long Breack
+    longBreakButton.addEventListener("click", function(){
+        findIndex("LONG_BREAK")
+        // changeColor(CONFIG.LONG_BREAK);
+    })
+    
+    //timer
+    class Timer{
+        constructor(minuteId, secondId){
+            this.minuteElement = document.getElementById(minuteId);
+            this.secondElement = document.getElementById(secondId);
+            this.timerInterval = null;
+            this.minuteElement.textContent = CONFIG.POMODORO.time;
+            this.secondElement.textContent = "00";
+        }
+    
+        start(){
+            if(!this.timerInterval){
+                this.timerInterval = setInterval(()=>{
+                    let min = parseInt(this.minuteElement.textContent);
+                    let sec = parseInt(this.secondElement.textContent);
+                    sec--
+                    if(sec < 0){
+                        min = min -1;
+                        if(sec<0){
+                            clearInterval(this.timerInterval);;
+                            this.timerInterval = null
+                            return
+                        }
+                        sec =59;
+                    }
+                     this.minuteElement.textContent = (min < 10 ? "0"+min : min);
+                     this.secondElement.textContent = (sec < 10 ? "0"+ sec : sec);
+                },1000)
+            }    
+        }
+    
+        stop(){
+            if(this.timerInterval){
+                clearInterval(this.timerInterval);
+                this.timerInterval = null
+            }
+        }
+      }
+    
+    const timer = new Timer(minuteId, secondId);
 
-     
+    
+    startBtn.addEventListener("click",function (){
+        if (timer.timerInterval) {
+          timer.stop();
+      } else {
+          timer.start();
+      }
+      console.log('Start button clicked')
+    })
+    timer.start();
+  
+
     //события для кнопки add task
     addTaskButton.addEventListener('click', function(){
         const todoList = document.querySelector(".todo-list");

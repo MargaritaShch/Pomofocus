@@ -4,7 +4,6 @@
 }
 
 #theme {
-  background: rgb(186, 73, 73);
   color: white;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -49,7 +48,7 @@
   font-size: 150px;
 }
 
-.btn {
+.start-btn {
   cursor: pointer;
   border: none;
   margin: 20px 180px 20px;
@@ -212,12 +211,55 @@
   box-shadow: 2px 1px 2px 1px rgba(128, 128, 128, 0.52);
 }
 
-.btns {
+.container-for-task {
+  margin: auto;
+  width: 520px;
+  height: 260px;
+  background-color: white;
+  border-radius: 10px;
+}
+.container-for-task .input-task {
+  cursor: pointer;
+  margin-left: 30px;
+  border: none;
+  font-size: 30px;
+  font-style: italic;
+  font-weight: bold;
+  padding-top: 30px;
+  color: grey;
+  padding-bottom: 30px;
+  outline: none;
+}
+.container-for-task .est-pomodoros {
+  font-size: 20px;
+  margin-left: 30px;
+  color: black;
+}
+.container-for-task .count-pomodoros {
+  border-radius: 10px;
+  padding: 10px;
+  border: 0.5px solid grey;
+  margin-left: 30px;
+  width: 80px;
+  height: 30px;
+  background-color: rgba(128, 128, 128, 0.382);
+}
+.container-for-task .plus-btn,
+.container-for-task .minus-btn {
+  cursor: pointer;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 2px 2px 2px 2px grey;
+  width: 50px;
+  height: 40px;
+  padding-right: 30px;
+}
+.container-for-task .btns {
   display: flex;
   justify-content: right;
   padding-top: 50px;
 }
-.btns button {
+.container-for-task .btns button {
   cursor: pointer;
   background-color: white;
   width: 70px;
@@ -225,33 +267,46 @@
   border-radius: 5px;
   font-size: 15px;
 }
-.btns .save-btn {
+.container-for-task .btns .save-btn {
   color: white;
   background-color: rgb(72, 71, 71);
   border: none;
+  margin-right: 20px;
 }
-.btns .cancel-btn {
+.container-for-task .btns .cancel-btn {
   border: none;
   background: white;
   margin-right: 20px;
 }
 
-.do-tasks {
+.task-list {
+  display: flex;
+  justify-content: space-around;
+  width: 520px;
+  height: 60px;
   margin: auto;
-  width: 525px;
-  height: 50px;
-  background-color: white;
+  background: white;
   border-radius: 5px;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
-
-.tasks {
+.task-list .do-task {
   display: flex;
-  justify-content: center;
-  padding-top: 15px;
   color: black;
-  font-weight: bold;
-  text-align: center;
+  padding-top: 17px;
+}
+.task-list .delete-task {
+  cursor: pointer;
+  color: white;
+  background-color: rgb(72, 71, 71);
+  border: none;
+  margin-right: 20px;
+  font-size: 15px;
+  margin-top: 10px;
+  width: 70px;
+  height: 34px;
+  border-radius: 5px;
+  font-size: 15px;
 }
 
 /*# sourceMappingURL=style.css.map */

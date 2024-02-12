@@ -75,8 +75,17 @@
   color: rgba(86, 82, 82, 0.503);
 }
 
+.counter-tasks{
+  color: rgb(20, 19, 19);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
 .tt-focus {
   padding-top: 22px;
+
 }
 
 .number-task,
@@ -324,19 +333,28 @@
     display: flex;
     color: black;
     padding-top: 17px;
+    
   }
-  .delete-task{
-    cursor: pointer;
-    color: white;
-    background-color: rgb(72, 71, 71);
-    border: none;
-    margin-right: 20px;
-    font-size: 15px;
-    margin-top: 10px;
-    width: 70px;
-    height: 34px;
-    border-radius: 5px;
-    font-size: 15px;
+ 
+
+  .right-side{
+    margin-left: 30px;
+    display: flex;
+    justify-content: right;
+
+    .use-pomodoro,
+    .count-pomodoro{
+      color:  rgb(24, 23, 23);
+    }
+
+    .delete-task{
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      border-radius: 3px;
+      border: none;
+      background-color: rgba(103, 106, 106, 0.574);
+    }
+  }
   
-  }
 }

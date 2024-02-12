@@ -163,6 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
         //count task
         taskCount++
         counterSpan.textContent = taskCount  
+        
       const inputTask =
         saveBtn.parentElement.parentElement.querySelector(".input-task");
       const inputValue = inputTask.value;

@@ -42,6 +42,7 @@
 
     &:hover {
       border-radius: 10px;
+      background-color: rgba(0, 0, 0, 0.15);
     }
   }
 }
@@ -61,11 +62,13 @@
   font-size: 30px;
   height: 55px;
   width: 200px;
-  color: rgb(186, 73, 73);
+  color: rgba(13, 13, 13, 0.592);
   font-weight: bold;
   background-color: white;
   transition: color 0.5s ease-in-out 0s;
   min-height: 55px;
+  
+
 
 }
   
@@ -75,8 +78,17 @@
   color: rgba(86, 82, 82, 0.503);
 }
 
+.counter-tasks{
+  color: rgb(20, 19, 19);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
 .tt-focus {
   padding-top: 22px;
+
 }
 
 .number-task,
@@ -157,12 +169,6 @@
   background: rgba(255, 255, 255, 0.972);
 }
 
-.est-pomodoros {
-  color: black;
-  padding-top: 15px;
-  
-}
-
 .count-pomodoros {
   width: 50px;
   height: 40px;
@@ -235,10 +241,15 @@
 .container-for-task{
   margin:  auto;
   width: 520px;
-  height:  260px;
+  height:  280px;
   background-color: white;
   border-radius: 10px;
 
+  span{
+    color: black;
+    margin-left: 32px;
+    font-weight: bold;
+  }
   .input-task{
     cursor: pointer;
     margin-left: 30px;
@@ -252,12 +263,6 @@
     outline: none;
   }
 
-  .est-pomodoros{
-    font-size: 20px;
-    margin-left: 30px;
-    color: black;
-  }
-
   .count-pomodoros{
     border-radius: 10px;
     padding: 10px;
@@ -267,6 +272,7 @@
     height:30px;
     background-color: rgba(128, 128, 128, 0.382);
   }
+  
   .plus-btn,
   .minus-btn{
     cursor: pointer;
@@ -276,12 +282,17 @@
     width: 50px;
     height: 40px;
     padding-right: 30px;
+    
   }
 
   .btns{
+    margin-top: 12px;
     display: flex;
     justify-content: right;
     padding-top: 50px;
+    background-color: rgba(128, 128, 128, 0.326);
+    padding-bottom: 20px;
+    
     
   
     button{
@@ -291,27 +302,27 @@
       height: 34px;
       border-radius: 5px;
       font-size: 15px;
-  
     }
     .save-btn{
       color: white;
       background-color: rgb(72, 71, 71);
       border: none;
-      margin-right: 20px;
+
+      &:hover{
+        background-color: rgba(0, 0, 0, 0.408);
+      }
     }
   
     .cancel-btn{
       border: none;
-      background: white;
+      background: none;
       margin-right: 20px;
-    }
   }
 }
-
+}
 
 .task-list{
   display: flex;
-  justify-content: space-around;
   width: 520px;
   height: 60px;
   margin: auto;
@@ -320,23 +331,38 @@
   margin-top: 10px;
   margin-bottom: 10px;
 
-  .do-task{
-    display: flex;
-    color: black;
-    padding-top: 17px;
-  }
-  .delete-task{
-    cursor: pointer;
-    color: white;
-    background-color: rgb(72, 71, 71);
-    border: none;
-    margin-right: 20px;
-    font-size: 15px;
-    margin-top: 10px;
-    width: 70px;
-    height: 34px;
-    border-radius: 5px;
-    font-size: 15px;
+ .do-task span{
+  font-weight: bold;
+  padding-top:5px;
+ }
   
+ .right-side{
+  display: flex;
+  justify-content: end;
+
+  .use-pmodoro,
+  .count-pomodoro{
+    font-weight: bold;
+    color: grey;
+    font-size: 20px;
+    padding-top: 20px;
+    
   }
+
+ .count-pomodoro{
+    padding-right: 20px;
+ }
+
+ .delete-task{
+  // margin-left: 150%;
+  margin-top: 15px;
+  margin-left: 30px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 3px;
+  border: none;
+  background-color: rgba(128, 128, 128, 0.387);
+ }
+ }
 }

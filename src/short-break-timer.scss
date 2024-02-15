@@ -1,24 +1,9 @@
-#theme{
-    &.short-break-timer-btn {
-        background-color: rgb(56, 133, 138);
-    
-        .start-btn {
-            color: rgb(56, 133, 138);
-        }
-    
-        .short-break-timer-btn {
-            background-color: rgba(0, 0, 0, 0.15);
-        }
-    
-        .pomodoro-timer-btn,
-        .long-break-timer-btn {
-            background-color: rgb(56, 133, 138, 0);
-        }
-    }
+#theme.short-break-timer{
+    background-color: rgb(56, 133, 138);
 }
    
-  
- 
+
+
 
   
 

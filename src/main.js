@@ -34,6 +34,24 @@ document.addEventListener("DOMContentLoaded", function () {
     },
   };
 
+
+    function saveTimeAndTheme(theme, time){
+      localStorage.setItem("themeAndTime",JSON.stringify({theme, time}))
+    }
+  //save theme and time from local storage
+  const savedThemeAnadTime = JSON.parse(localStorage.getItem("themeAndTime"))
+  if (savedThemeAnadTime) {
+    const {theme, time} =savedThemeAnadTime
+    changeColor(theme);
+
+   
+    let min = document.getElementById("min");
+    let sec = document.getElementById("sec");
+    min.textContent = time.toString().padStart(2, "0");
+    sec.textContent = "00";
+  }
+ 
+  console.log(savedThemeAnadTime)
   //change color on breaks
   function changeColor(themeClass) {
     body.classList.remove(
@@ -47,20 +65,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //сchange breaks
   function findIndex(key) {
+    const theme = CONFIG[key].class
+    const time = CONFIG[key].time
+    
     let min = document.getElementById("min");
     let sec = document.getElementById("sec");
-    key = CONFIG[key];
-    min.textContent = key.time.toString().padStart(2, "0");
+    min.textContent =time.toString().padStart(2, "0");
     sec.textContent = "00";
-    changeColor(key.class);
+    
+    changeColor(theme);
     clearInterval(timerInterval);
     timerInterval = null;
+    
+    saveTimeAndTheme(theme, time) 
   }
 
   //click Pomodoro
   pomodoroButton.addEventListener("click", function () {
     findIndex("POMODORO");
-    reseetingTimer();
+    reseetingTimer();  
   });
   //click Short Break
   shortBreakButton.addEventListener("click", function () {
@@ -73,13 +96,15 @@ document.addEventListener("DOMContentLoaded", function () {
     reseetingTimer();
   });
 
+
+  
   //timer
   class Timer {
-    constructor(minuteId, secondId) {
+    constructor(minuteId, secondId,savedTime) {
       this.minuteElement = document.getElementById(minuteId);
       this.secondElement = document.getElementById(secondId);
       this.timerInterval = null;
-      this.minuteElement.textContent = CONFIG.POMODORO.time;
+      this.minuteElement.textContent = savedTime.toString().padStart(2, "0") || CONFIG.POMODORO.time;
       this.secondElement.textContent = "00";
     }
 
@@ -108,7 +133,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  const timer = new Timer(minuteId, secondId);
+
+  const savedTime = savedThemeAnadTime ? savedThemeAnadTime.time : null;
+  const timer = new Timer(minuteId, secondId, savedTime);
 
   //click START and launch timer
   startBtn.addEventListener("click", function () {
@@ -128,13 +155,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   //save tasks from local storage
   const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
-  // Load saved tasks onto the page
+  
+  //saved tasks onto the page
   savedTasks.forEach(savedTask => {
     const taskList = createTaskElement(savedTask);
     containerTask.appendChild(taskList);
   });
 
+  countTask()
 
   const containerForTask = document.querySelector(".container-for-task");
   addTaskButton.addEventListener("click", function () {
@@ -150,47 +178,83 @@ document.addEventListener("DOMContentLoaded", function () {
   saveBtn.addEventListener("click", function (event) {
     event.preventDefault();
     const textInput = inputWriteTask.value;
+    const pomodoroCount = countInput.value;
     if (textInput.trim() === "") {
       inputWriteTask.placeholder = "Add your text";
       return;
     }
 
-    const taskList = createTaskElement(textInput);
+    const task = { textInput, pomodoroCount };
+    const taskList = createTaskElement(task);
     containerTask.appendChild(taskList);
-
-    savedTasks.push(textInput);
+    savedTasks.push(task);
     localStorage.setItem("tasks", JSON.stringify(savedTasks));
-
     inputWriteTask.value = "";
+    countInput.value = ''
+    countTask()
   });
 
   //сreate task 
-  function createTaskElement(taskText) {
+  function createTaskElement(task) {
     const taskList = document.createElement("div");
     taskList.classList = "task-list";
     taskList.innerHTML = `
       <div class="do-task">
-        <span>${taskText}</span>
+        <span>${task.textInput}</span>
       </div>
       <div class="right-side">
-        <span class="use-pmodoro">0</span><span class ="count-pomodoro">/0</span> 
-        <button class="delete-task">DEL</button>
+        <span class="use-pmodoro">0</span><span class ="count-pomodoro">/${task.pomodoroCount}</span> 
+        <button class="open-task">open</button>
+        <button class="delete-task">&#10006;</button>
       </div>`;
-
+     
     //click DEL in task
     const deleteBtn = taskList.querySelector(".delete-task");
     deleteBtn.addEventListener("click", function () {
       taskList.remove();
-      const taskIndex = savedTasks.indexOf(taskText);
+      const taskIndex = savedTasks.indexOf(task);
       if (taskIndex !== -1) {
         savedTasks.splice(taskIndex, 1);
         localStorage.setItem("tasks", JSON.stringify(savedTasks));
+        
       }
+      countTask()
     });
+    // counterPomodoro();
     return taskList;
   }
 
+  //count tasks
   function countTask(){
-    
+    const count = savedTasks.length
+    counterSpan.innerHTML = `#${count}`
   }
+  console.log(savedTasks)
+  
+  //setting count pomodoro
+  let plusBtn = document.querySelector(".plus-btn")
+  let minusBtn = document.querySelector(".minus-btn")
+  let countInput = document.querySelector(".count-pomodoros")
+  let countPomodoro = document.querySelector(".count-pomodoro")
+  countInput.value = 1
+
+  function counterPomodoro(){
+    console.log(countPomodoro)
+    if (countPomodoro) {
+      countPomodoro.innerHTML = `/${countInput.value}`;
+    }
+  }
+  console.log(countPomodoro)
+  plusBtn.addEventListener("click",function(){
+    countInput.value++
+    counterPomodoro()
+  })
+
+  minusBtn.addEventListener("click",function(){
+    countInput.value--
+    if(countInput.value <= 1){
+       countInput.value = 1
+    }
+    counterPomodoro()
+  })
 })

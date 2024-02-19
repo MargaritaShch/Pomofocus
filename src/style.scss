@@ -331,6 +331,10 @@
   border-radius: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
+  
+  &:hover{
+    background-color: bisque;
+  }
 
  .do-task span{
   font-weight: bold;
@@ -396,13 +400,13 @@
   .correct-span-task{
     cursor: pointer;
     margin-left: 30px;
+    margin-bottom: 20px;
     border: none;
     font-size: 30px;
     font-style: italic;
     font-weight: bold;
     padding-top: 30px;
     color: black;
-    padding-bottom: 30px;
     outline: none;
   }
 
@@ -452,16 +456,7 @@
       background: none;
       margin-right: 20px;
     }
-    .correct-save-btn{
-      color: white;
-      background-color: rgb(72, 71, 71);
-      border: none;
-
-      &:hover{
-        background-color: rgba(0, 0, 0, 0.408);
-      }
-    }
-  
+    
     .correct-cancel-btn{
       border: none;
       background: none;

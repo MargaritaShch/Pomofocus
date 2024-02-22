@@ -1,0 +1,15 @@
+#theme.pomodoro-timer-btn {
+  background-color: rgb(186, 73, 73);
+}
+#theme.pomodoro-timer-btn .start-btn {
+  color: rgb(186, 73, 73);
+}
+#theme.pomodoro-timer-btn .pomodoro-timer-btn {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+#theme.pomodoro-timer-btn .short-break-timer-btn,
+#theme.pomodoro-timer-btn .long-break-timer-btn {
+  background-color: rgba(186, 73, 73, 0);
+}
+
+/*# sourceMappingURL=pomodoro-timer.css.map */

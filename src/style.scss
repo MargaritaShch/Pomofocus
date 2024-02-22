@@ -73,14 +73,15 @@
 }
   
 
-.number-task {
-  padding-top: 20px;
-  color: rgba(86, 82, 82, 0.503);
-}
+// .number-task {
+//   padding-top: 20px;
+//   color: rgba(86, 82, 82, 0.503);
+// }
 
 .counter-tasks{
-  color: rgb(20, 19, 19);
-  font-weight: bold;
+  font-size: 20px;
+  color:white;
+  // font-weight: bold;
   display: flex;
   justify-content: center;
   padding-top: 20px;
@@ -241,7 +242,7 @@
 .container-for-task{
   margin:  auto;
   width: 520px;
-  height:  260px;
+  height:  280px;
   background-color: white;
   border-radius: 10px;
 
@@ -272,6 +273,7 @@
     height:30px;
     background-color: rgba(128, 128, 128, 0.382);
   }
+  
   .plus-btn,
   .minus-btn{
     cursor: pointer;
@@ -281,6 +283,7 @@
     width: 50px;
     height: 40px;
     padding-right: 30px;
+    
   }
 
   .btns{
@@ -289,6 +292,7 @@
     justify-content: right;
     padding-top: 50px;
     background-color: rgba(128, 128, 128, 0.326);
+    padding-bottom: 20px;
     
     
   
@@ -327,6 +331,10 @@
   border-radius: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
+  
+  &:hover{
+    background-color: bisque;
+  }
 
  .do-task span{
   font-weight: bold;
@@ -351,6 +359,7 @@
  }
 
  .delete-task{
+  // margin-left: 150%;
   margin-top: 15px;
   margin-left: 30px;
   cursor: pointer;
@@ -360,5 +369,99 @@
   border: none;
   background-color: rgba(128, 128, 128, 0.387);
  }
+
+ .open-task{
+  // margin-left: 150%;
+  margin-top: 15px;
+  margin-left: 30px;
+  cursor: pointer;
+  width: 40px;
+  height: 30px;
+  border-radius: 3px;
+  border: none;
+  background-color: rgba(128, 128, 128, 0.387);
  }
+ }
+}
+
+
+.container-for-correct-task{
+  margin:  auto;
+  width: 520px;
+  height:  280px;
+  background-color: white;
+  border-radius: 10px;
+
+  span{
+    color: black;
+    margin-left: 32px;
+    font-weight: bold;
+  }
+  .correct-span-task{
+    cursor: pointer;
+    margin-left: 30px;
+    margin-bottom: 20px;
+    border: none;
+    font-size: 30px;
+    font-style: italic;
+    font-weight: bold;
+    padding-top: 30px;
+    color: black;
+    outline: none;
+  }
+
+  .correct-count-pomodoros,
+  .correct-count-pomodoros1{
+    border-radius: 10px;
+    padding: 10px;
+    border: 0.5px solid grey;
+    margin-left: 30px;
+    width: 40px;
+    height:30px;
+    background-color: rgba(128, 128, 128, 0.382);
+  }
+  
+  .correct-plus-btn,
+  .correct-minus-btn{
+    cursor: pointer;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 2px 2px 2px 2px grey;
+    width: 50px;
+    height: 40px;
+    padding-right: 30px;
+    
+  }
+
+  .correct-btns{
+    margin-top: 12px;
+    display: flex;
+    justify-content: right;
+    padding-top: 50px;
+    background-color: rgba(128, 128, 128, 0.326);
+    padding-bottom: 20px;
+    
+    
+  
+    button{
+      cursor: pointer;
+      background-color: white;
+      width: 70px;
+      height: 34px;
+      border-radius: 5px;
+      font-size: 15px;
+    }
+
+    .correct-delete-btn{
+      border: none;
+      background: none;
+      margin-right: 20px;
+    }
+    
+    .correct-cancel-btn{
+      border: none;
+      background: none;
+      margin-right: 20px;
+  }
+}
 }

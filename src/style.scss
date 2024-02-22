@@ -67,20 +67,19 @@
   background-color: white;
   transition: color 0.5s ease-in-out 0s;
   min-height: 55px;
-  
-
-
 }
-  
 
 // .number-task {
 //   padding-top: 20px;
 //   color: rgba(86, 82, 82, 0.503);
 // }
 
-.counter-tasks{
+.counter-tasks {
   font-size: 20px;
-  color:white;
+  color: white;
+  // font-weight: bold;
+  font-size: 20px;
+  color: white;
   // font-weight: bold;
   display: flex;
   justify-content: center;
@@ -89,7 +88,6 @@
 
 .tt-focus {
   padding-top: 22px;
-
 }
 
 .number-task,
@@ -112,7 +110,7 @@
     font-size: 18px;
   }
 
-  .three-dots{
+  .three-dots {
     cursor: pointer;
     width: 30px;
     height: 30px;
@@ -173,7 +171,6 @@
 .count-pomodoros {
   width: 50px;
   height: 40px;
-
 }
 
 .task-container {
@@ -200,9 +197,8 @@
     outline: none;
     margin-top: 40px;
 
-    &:hover{
+    &:hover {
       color: black;
-
     }
   }
 
@@ -237,21 +233,21 @@
   }
 }
 
-
 //созданный контейнер для ввода задач
-.container-for-task{
-  margin:  auto;
+.container-for-task {
+  margin: auto;
   width: 520px;
-  height:  280px;
+  height: 280px;
+  height: 280px;
   background-color: white;
   border-radius: 10px;
 
-  span{
+  span {
     color: black;
     margin-left: 32px;
     font-weight: bold;
   }
-  .input-task{
+  .input-task {
     cursor: pointer;
     margin-left: 30px;
     border: none;
@@ -264,18 +260,18 @@
     outline: none;
   }
 
-  .count-pomodoros{
+  .count-pomodoros {
     border-radius: 10px;
     padding: 10px;
     border: 0.5px solid grey;
     margin-left: 30px;
     width: 80px;
-    height:30px;
+    height: 30px;
     background-color: rgba(128, 128, 128, 0.382);
   }
-  
+
   .plus-btn,
-  .minus-btn{
+  .minus-btn {
     cursor: pointer;
     border-radius: 10px;
     border: none;
@@ -283,20 +279,18 @@
     width: 50px;
     height: 40px;
     padding-right: 30px;
-    
   }
 
-  .btns{
+  .btns {
     margin-top: 12px;
     display: flex;
     justify-content: right;
     padding-top: 50px;
     background-color: rgba(128, 128, 128, 0.326);
     padding-bottom: 20px;
-    
-    
-  
-    button{
+    padding-bottom: 20px;
+
+    button {
       cursor: pointer;
       background-color: white;
       width: 70px;
@@ -304,25 +298,25 @@
       border-radius: 5px;
       font-size: 15px;
     }
-    .save-btn{
+    .save-btn {
       color: white;
       background-color: rgb(72, 71, 71);
       border: none;
 
-      &:hover{
+      &:hover {
         background-color: rgba(0, 0, 0, 0.408);
       }
     }
-  
-    .cancel-btn{
+
+    .cancel-btn {
       border: none;
       background: none;
       margin-right: 20px;
+    }
   }
 }
-}
 
-.task-list{
+.task-list {
   display: flex;
   width: 520px;
   height: 60px;
@@ -331,73 +325,76 @@
   border-radius: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
-  
-  &:hover{
+
+  &:hover {
     background-color: bisque;
   }
 
- .do-task span{
-  font-weight: bold;
-  padding-top:5px;
- }
-  
- .right-side{
-  display: flex;
-  justify-content: end;
-
-  .use-pmodoro,
-  .count-pomodoro{
-    font-weight: bold;
-    color: grey;
-    font-size: 20px;
-    padding-top: 20px;
-    
+  &:hover {
+    background-color: bisque;
   }
 
- .count-pomodoro{
-    padding-right: 20px;
- }
+  .do-task span {
+    font-weight: bold;
+    padding-top: 5px;
+  }
 
- .delete-task{
-  // margin-left: 150%;
-  margin-top: 15px;
-  margin-left: 30px;
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  border-radius: 3px;
-  border: none;
-  background-color: rgba(128, 128, 128, 0.387);
- }
+  .right-side {
+    display: flex;
+    justify-content: end;
 
- .open-task{
-  // margin-left: 150%;
-  margin-top: 15px;
-  margin-left: 30px;
-  cursor: pointer;
-  width: 40px;
-  height: 30px;
-  border-radius: 3px;
-  border: none;
-  background-color: rgba(128, 128, 128, 0.387);
- }
- }
+    .use-pmodoro,
+    .count-pomodoro {
+      font-weight: bold;
+      color: grey;
+      font-size: 20px;
+      padding-top: 20px;
+    }
+
+    .count-pomodoro {
+      padding-right: 20px;
+    }
+
+    .delete-task {
+      // margin-left: 150%;
+      // margin-left: 150%;
+      margin-top: 15px;
+      margin-left: 30px;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      border-radius: 3px;
+      border: none;
+      background-color: rgba(128, 128, 128, 0.387);
+    }
+
+    .open-task {
+      // margin-left: 150%;
+      margin-top: 15px;
+      margin-left: 30px;
+      cursor: pointer;
+      width: 40px;
+      height: 30px;
+      border-radius: 3px;
+      border: none;
+      background-color: rgba(128, 128, 128, 0.387);
+    }
+  }
 }
 
-
-.container-for-correct-task{
-  margin:  auto;
+.container-for-correct-task {
+  margin: auto;
   width: 520px;
-  height:  280px;
+  height: 280px;
   background-color: white;
   border-radius: 10px;
 
-  span{
+  span {
     color: black;
     margin-left: 32px;
     font-weight: bold;
   }
-  .correct-span-task{
+  .correct-span-task {
     cursor: pointer;
     margin-left: 30px;
     margin-bottom: 20px;
@@ -411,18 +408,18 @@
   }
 
   .correct-count-pomodoros,
-  .correct-count-pomodoros1{
+  .correct-count-pomodoros1 {
     border-radius: 10px;
     padding: 10px;
     border: 0.5px solid grey;
     margin-left: 30px;
     width: 40px;
-    height:30px;
+    height: 30px;
     background-color: rgba(128, 128, 128, 0.382);
   }
-  
+
   .correct-plus-btn,
-  .correct-minus-btn{
+  .correct-minus-btn {
     cursor: pointer;
     border-radius: 10px;
     border: none;
@@ -430,20 +427,17 @@
     width: 50px;
     height: 40px;
     padding-right: 30px;
-    
   }
 
-  .correct-btns{
+  .correct-btns {
     margin-top: 12px;
     display: flex;
     justify-content: right;
     padding-top: 50px;
     background-color: rgba(128, 128, 128, 0.326);
     padding-bottom: 20px;
-    
-    
-  
-    button{
+
+    button {
       cursor: pointer;
       background-color: white;
       width: 70px;
@@ -452,16 +446,16 @@
       font-size: 15px;
     }
 
-    .correct-delete-btn{
+    .correct-delete-btn {
       border: none;
       background: none;
       margin-right: 20px;
     }
-    
-    .correct-cancel-btn{
+
+    .correct-cancel-btn {
       border: none;
       background: none;
       margin-right: 20px;
+    }
   }
-}
 }

@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
     min.textContent = time.toString().padStart(2, "0");
     sec.textContent = "00";
     changeColor(theme);
+    changeColor(theme);
     clearInterval(timerInterval);
     timerInterval = null;
     saveTimeAndTheme(theme, time);
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //click Pomodoro
   pomodoroButton.addEventListener("click", function () {
     findIndex("POMODORO");
-    reseetingTimer();
+    reseetingTimer();  
   });
   //click Short Break
   shortBreakButton.addEventListener("click", function () {

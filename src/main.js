@@ -2,10 +2,12 @@ import "./style.scss";
 import "./pomodoro-timer.scss";
 import "./short-break-timer.scss";
 import "./long-break-timer.scss";
-import Timer from "./Modules/timer.js";
+import Timer from "./Modules/Timer.js";
 import settingDOM from "./Modules/settingDOM.js";
-import taskTableManage from "./Modules/taskTableManage.js";
-import correctTaskTableManage from "./Modules/correctTaskTable.js";
+import ThemeManager from "./Modules/ThemeManager.js";
+import TimeManager from "./Modules/TimeManager.js";
+import TaskTableManager from "./Modules/taskTableManager.js";
+
 
 document.addEventListener("DOMContentLoaded", function () {
   let timerInterval;
@@ -21,90 +23,63 @@ document.addEventListener("DOMContentLoaded", function () {
     saveTimeAndTheme,
   } = settingDOM();
 
+  const taskTableManager = new TaskTableManager();// ???
+  const themeManager = new ThemeManager(body);
+  const timerManager = new TimeManager(minuteId, secondId);
+  const timer = new Timer(minuteId, secondId);
+
   //save theme and time from local storage
-  getSavedThemeAndTime();
-
-  function getSavedThemeAndTime() {
-    const savedThemeAnadTime = JSON.parse(localStorage.getItem("themeAndTime"));
-    if (savedThemeAnadTime) {
-      const { theme, time } = savedThemeAnadTime;
-      changeColor(theme);
-
-      let min = document.getElementById("min");
-      let sec = document.getElementById("sec");
-      min.textContent = time.toString().padStart(2, "0");
-      sec.textContent = "00";
-
-      return time;
-    } else {
-      return null;
-    }
+    const savedThemeAndTime = JSON.parse(localStorage.getItem("themeAndTime"));
+    if (savedThemeAndTime) {
+      const {theme, time} = savedThemeAndTime;
+      themeManager.changeTheme(theme);
+      timerManager.updateTime(time);
   }
 
-  //change color on breaks
-  function changeColor(themeClass) {
-    body.classList.remove(
-      "pomodoro-timer",
-      "short-break-timer",
-      "long-break-timer"
-    );
-    //save color
-    body.classList.add(themeClass);
-  }
+    //click Pomodoro
+    pomodoroButton.addEventListener("click", function () {
+      const theme = CONFIG.POMODORO.class;
+      const time = CONFIG.POMODORO.time;
+      themeManager.changeTheme(theme);
+      timerManager.updateTime(time);
+      timer.start(time, 0); 
+      saveTimeAndTheme(theme, time);
+    });
 
-  //сchange breaks
-  function findIndex(key) {
-    const theme = CONFIG[key].class;
-    const time = CONFIG[key].time;
-    let min = document.getElementById("min");
-    let sec = document.getElementById("sec");
-    min.textContent = time.toString().padStart(2, "0");
-    sec.textContent = "00";
-    changeColor(theme);
-    changeColor(theme);
-    clearInterval(timerInterval);
-    timerInterval = null;
-    saveTimeAndTheme(theme, time);
-  }
+    //click Short Break
+    shortBreakButton.addEventListener("click", function () {
+      const theme = CONFIG.SHORT_BREAK.class;
+      const time = CONFIG.SHORT_BREAK.time;
+      themeManager.changeTheme(theme);
+      timerManager.updateTime(time);
+      timer.start(time, 1); 
+      saveTimeAndTheme(theme, time);
+    });
 
-  //click Pomodoro
-  pomodoroButton.addEventListener("click", function () {
-    findIndex("POMODORO");
-    reseetingTimer();  
-  });
-  //click Short Break
-  shortBreakButton.addEventListener("click", function () {
-    findIndex("SHORT_BREAK");
-    reseetingTimer();
-  });
-  //click Long Breack
-  longBreakButton.addEventListener("click", function () {
-    findIndex("LONG_BREAK");
-    reseetingTimer();
-  });
+    //click Long Break
+    longBreakButton.addEventListener("click", function () {
+      const theme = CONFIG.LONG_BREAK.class;
+      const time = CONFIG.LONG_BREAK.time;
+      themeManager.changeTheme(theme);
+      timerManager.updateTime(time);
+      timer.start(time, 2); 
+      saveTimeAndTheme(theme, time);
+    });
+  
+    //reset timer when chenge themes ???
+  //   function reseetingTimer() {
+  //     if (timer) {
+  //       timer.stop();
+  //     }
+  //  }
 
-  //TIMER
-  const savedTime = getSavedThemeAndTime();
-  const timer = new Timer(minuteId, secondId, savedTime);
-
-  //click START and launch timer
-  startBtn.addEventListener("click", function () {
-    if (!timer.timerInterval) {
-      timer.start();
-    } else {
-      timer.stop();
-    }
-    console.log("Start button clicked");
-  });
-
-  //reset timer when chenge themes
-  function reseetingTimer() {
-    if (timer) {
-      timer.stop();
-    }
-  }
-
-  //manage table task
-  taskTableManage();
-  correctTaskTableManage()
+   //click START and launch timer
+    startBtn.addEventListener("click", function () {
+      if (!timer.timerInterval) {
+        timer.start();
+      } else {
+        timer.stop();
+      }
+      console.log("start: clicked");
+    });
 });

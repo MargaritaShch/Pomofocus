@@ -1,40 +1,41 @@
-// timer.js
 import settingDOM from "./settingDOM";
 const { CONFIG, timerInterval } = settingDOM();
 
 class Timer {
-  constructor(minuteId, secondId, savedTime) {
-    this.minuteElement = document.getElementById(minuteId);
-    this.secondElement = document.getElementById(secondId);
+  constructor() {
     this.timerInterval = null;
-    this.minuteElement.textContent = savedTime
-      ? savedTime.toString().padStart(2, "0")
-      : CONFIG.POMODORO.time;
-    this.secondElement.textContent = "00";
+    this.minutes = 0;
+    this.seconds = 0;
   }
 
-  start() {
+  start(minutes, seconds) {
+    this.minutes = minutes;
+    this.seconds = seconds;
     this.timerInterval = setInterval(() => {
-      let min = parseInt(this.minuteElement.textContent);
-      let sec = parseInt(this.secondElement.textContent);
-      sec--;
-      if (sec < 0) {
-        min = min - 1;
-        if (min < 0) {
-          clearInterval(this.timerInterval);
-        }
-        sec = 59;
-      }
-      this.minuteElement.textContent = min < 10 ? "0" + min : min;
-      this.secondElement.textContent = sec < 10 ? "0" + sec : sec;
+      this.tick();
     }, 1000);
   }
 
   stop() {
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
-      this.timerInterval = null;
+    clearInterval(this.timerInterval);
+    this.timerInterval = null;
+  }
+
+  tick() {
+    if (this.seconds === 0) {
+      if (this.minutes === 0) {
+        this.stop();
+        return;
+      }
+      this.minutes--;
+      this.seconds = 59;
+    } else {
+      this.seconds--;
     }
+  }
+
+  getLeftTime() {
+    return { minutes: this.minutes, seconds: this.seconds };
   }
 }
 

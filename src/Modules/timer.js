@@ -1,14 +1,28 @@
 import settingDOM from "./settingDOM";
 const { CONFIG, timerInterval } = settingDOM();
-
+//Subject
 class Timer {
   constructor() {
+    this.observers = []; //список наблюдателей
     this.timerInterval = null;
     this.minutes = 0;
     this.seconds = 0;
   }
+  subscribe(observer) {
+    this.observers.push(observer)//подписка на наблюдателей
+  }
+
+  unsubscribe(observer) {
+    this.observers = this.observers.filter(item => item !== observer)//отписка от наблюдателей
+  }
+
+  notifyObserver(data) {
+    this.observers.forEach(observer => observer.update(data))//оповещение наблюдателей
+    console.log(data)
+  }
 
   start(minutes, seconds) {
+    if (this.timerInterval !== null) return;
     this.minutes = minutes;
     this.seconds = seconds;
     this.timerInterval = setInterval(() => {
@@ -32,10 +46,7 @@ class Timer {
     } else {
       this.seconds--;
     }
-  }
-
-  getLeftTime() {
-    return { minutes: this.minutes, seconds: this.seconds };
+    this.notifyObserver({ minutes: this.minutes, seconds: this.seconds });
   }
 }
 

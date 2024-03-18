@@ -17,14 +17,21 @@ class Timer {
   }
 
   notifyObserver(data) {
-    this.observers.forEach(observer => observer.update(data))//оповещение наблюдателей
-    console.log(data)
+    this.observers.forEach(observer => observer.update({ minutes: this.minutes, seconds: this.seconds }))//оповещение наблюдателей
+   
   }
 
   start(minutes, seconds) {
     if (this.timerInterval !== null) return;
-    this.minutes = minutes;
-    this.seconds = seconds;
+    this.minutes = Number(minutes);
+    this.seconds = Number(seconds);
+
+    if (isNaN(this.minutes) || isNaN(this.seconds)) {
+      console.error("Неверное значение времени:", minutes, seconds);
+      return;
+  }
+
+    console.log("Таймер запущен:", this.minutes, "минут", this.seconds, "секунд");
     this.timerInterval = setInterval(() => {
       this.tick();
     }, 1000);
@@ -33,6 +40,7 @@ class Timer {
   stop() {
     clearInterval(this.timerInterval);
     this.timerInterval = null;
+    console.log("Таймер остановлен");
   }
 
   tick() {
@@ -46,8 +54,10 @@ class Timer {
     } else {
       this.seconds--;
     }
+    console.log("Тик таймера:", this.minutes, "минут", this.seconds, "секунд"); 
     this.notifyObserver({ minutes: this.minutes, seconds: this.seconds });
-  }
+ }
 }
+
 
 export default Timer;

@@ -140,6 +140,7 @@
   border: 2px dashed rgba(255, 255, 255, 0.4);
   border-radius: 10px;
   cursor: pointer;
+  margin-bottom: 70px;
 
   &:hover {
     background: rgba(255, 255, 255, 0.191);
@@ -356,8 +357,6 @@
     }
 
     .delete-task {
-      // margin-left: 150%;
-      // margin-left: 150%;
       margin-top: 15px;
       margin-left: 30px;
       cursor: pointer;
@@ -369,7 +368,6 @@
     }
 
     .open-task {
-      // margin-left: 150%;
       margin-top: 15px;
       margin-left: 30px;
       cursor: pointer;
@@ -458,4 +456,68 @@
       margin-right: 20px;
     }
   }
+}
+
+.container-discribe {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding-top: 20px;
+  background-color: white;
+  color: hsl(357, 50%, 22%);
+
+  hr {
+    width: 40px;
+    margin-top: 5px;
+    padding-top: 5px;
+    background-color: #f05b56;
+    border: none;
+  }
+
+  h2 {
+    font-size: 24px;
+    letter-spacing: 2px;
+  }
+  ul,
+  ol {
+    padding-top: 20px;
+    padding-left: 27px;
+    color: red;
+  }
+  li {
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: hsl(357, 50%, 22%);
+    padding-top: 10px;
+  }
+
+  p {
+    padding-top: 10px;
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+  .main-title {
+    max-width: 620px;
+    margin: auto;
+  }
+
+  .technique {
+    padding-top: 30px;
+    max-width: 620px;
+    margin: auto;
+  }
+
+  .how-to-use {
+    padding-top: 20px;
+    max-width: 620px;
+    margin: auto;
+  }
+
+  .feauters {
+    padding-top: 20px;
+    max-width: 620px;
+    margin: auto;
+  }
+}
+
+.footer {
+  background-color: white;
 }

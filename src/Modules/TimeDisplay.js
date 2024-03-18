@@ -5,10 +5,8 @@ class TimeDisplay {
     }
   
     update(time) {
-     
         this.minuteElem.textContent = time.minutes.toString().padStart(2, "0");
         this.secondElem.textContent = time.seconds.toString().padStart(2, "0");
-        console.error("ОШИБКА ОБЪЕКТА", time)  
     }
   }
   

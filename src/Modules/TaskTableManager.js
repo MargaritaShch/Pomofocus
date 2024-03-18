@@ -66,6 +66,17 @@ class TaskTableManager {
     this.minusBtn.addEventListener("click", () =>{
       this.decrementCount();
     });
+
+    const cancelBtn = document.querySelector(".cancel-btn"); 
+      cancelBtn.addEventListener("click", () => {
+        this.containerForTask.style.display = "none";
+        this.inputWriteTask.value = "";
+        this.countInput.value = "1"; 
+  });
+
+    this.correctCancelBtn.addEventListener("click", () => {
+      this.containerForCorrectTask.style.display = "none";
+    })
   }
   
    //сreate task
@@ -82,12 +93,21 @@ class TaskTableManager {
         <button class="delete-task">&#10006;</button>
       </div>`;
 
+    const openBtn = taskList.querySelector(".open-task");
+    openBtn.addEventListener("click", () => {
+        this.containerForTask.remove()
+        this.containerForCorrectTask.style.display = "block";
+        this.correctSpan.textContent = task.textInput; 
+    });
+
+    this.correctDeleteBtn.addEventListener("click", ()=> {
+      this.deleteTask(taskList, task)
+    })
     //click DEL btns in task
     const deleteBtn = taskList.querySelector(".delete-task");
     deleteBtn.addEventListener("click", ()=>{
-      this.deleteTask(taskList, task)
+       this.deleteTask(taskList, task)
     })
-    // const deleteCorrectBtn = document.querySelector(".correct-delete-task");
     return taskList;
   }
   
@@ -108,7 +128,7 @@ class TaskTableManager {
     } else {
       this.containerForTask.style.display = "none";
     }
-    this.addTaskButton.remove();
+    
   }
 
   //render correct table
@@ -119,6 +139,7 @@ class TaskTableManager {
         if (this.containerForCorrectTask.style.display === "none") {
           this.containerForCorrectTask.style.display = "block";
         }
+      console.log("CLICK:", openTask)
         const discriptionTask = openTask.closest(".task-list").querySelector(".do-task");
         this.correctSpan.innerHTML = discriptionTask.innerHTML;
         const counterPomodoroSpan = openTask.closest(".task-list").querySelector(".count-pomodoro");
@@ -129,15 +150,15 @@ class TaskTableManager {
     
 }
   
-  // updateTaskCount(count){
-  //   const pomodoroSpan = this.taskList.querySelector(".count-pomodoro");
-  //   pomodoroSpan.textContent = `/${count}`;
-  // }
-  //save task and add in container-task
+  updateTaskCount(count){
+    const pomodoroSpan = this.taskList.querySelector(".count-pomodoro");
+    pomodoroSpan.textContent = `/${count}`;
+  }
+  // save task and add in container-task
   saveTask(event) {
     event.preventDefault();
     const textInput = this.inputWriteTask.value;
-    const pomodoroCount = this.countInput.value;
+    const pomodoroCount = this.countInput.value || 1;
 
     if (textInput.trim() === "") {
       this.inputWriteTask.placeholder = "Add your text";
@@ -170,7 +191,6 @@ class TaskTableManager {
     })
   }
 
-    //count tasks
   countTask() {
     const count = this.savedTasks.length;
     this.counterSpan.innerHTML = `#${count}`;

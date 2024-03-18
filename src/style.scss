@@ -140,7 +140,7 @@
   border: 2px dashed rgba(255, 255, 255, 0.4);
   border-radius: 10px;
   cursor: pointer;
-  margin-bottom: 70px;
+  margin-bottom: 20px;
 
   &:hover {
     background: rgba(255, 255, 255, 0.191);
@@ -242,6 +242,7 @@
   height: 280px;
   background-color: white;
   border-radius: 10px;
+  margin-bottom: 20px;
 
   span {
     color: black;
@@ -386,16 +387,19 @@
   height: 280px;
   background-color: white;
   border-radius: 10px;
+  margin-bottom: 20px;
+ 
 
   span {
     color: black;
     margin-left: 32px;
+    margin-top: 20px;
     font-weight: bold;
   }
   .correct-span-task {
     cursor: pointer;
     margin-left: 30px;
-    margin-bottom: 20px;
+    padding-top: 20px;
     border: none;
     font-size: 30px;
     font-style: italic;

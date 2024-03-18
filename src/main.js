@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
         CONFIG,
         saveTimeAndTheme,
     } = settingDOM();
-
+    const taskTableManager = new TaskTableManager();
     const themeManager = new ThemeManager(body);
     //тема по умолчанию
     let currentTheme = 'POMODORO';

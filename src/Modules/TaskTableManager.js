@@ -20,7 +20,8 @@ class TaskTableManager {
       correctMinusBtn,
       correctDeleteBtn,
       correctCancelBtn,
-      containerTask
+      containerTask,
+      ttFocus
     } = settingDOM();
 
     this.addTaskButton = addTaskButton;
@@ -40,6 +41,7 @@ class TaskTableManager {
     this.correctMinusBtn = correctMinusBtn;
     this.correctDeleteBtn = correctDeleteBtn;
     this.correctCancelBtn = correctCancelBtn;
+    this.ttFocus = ttFocus
     this.savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
     this.callEventListener()
     this.getSavedTasks();
@@ -77,6 +79,8 @@ class TaskTableManager {
     this.correctCancelBtn.addEventListener("click", () => {
       this.containerForCorrectTask.style.display = "none";
     })
+
+    
   }
   
    //сreate task
@@ -103,6 +107,16 @@ class TaskTableManager {
     this.correctDeleteBtn.addEventListener("click", ()=> {
       this.deleteTask(taskList, task)
     })
+
+    const taskContent = taskList.querySelector('.do-task span'); 
+    taskList.addEventListener('click', () => {
+      const highlighted = document.querySelector('.task-list.highlighted');
+      if (highlighted) {
+          highlighted.classList.remove('highlighted'); 
+      }
+      taskList.classList.add('highlighted'); 
+      this.ttFocus.textContent = taskContent.textContent; 
+    })
     //click DEL btns in task
     const deleteBtn = taskList.querySelector(".delete-task");
     deleteBtn.addEventListener("click", ()=>{
@@ -117,8 +131,6 @@ class TaskTableManager {
       const taskList = this.createTaskElement(savedTask);
       this.containerTask.appendChild(taskList);
     });
-
-    this.countTask();
   }
  
   //render task table
@@ -172,7 +184,6 @@ class TaskTableManager {
     localStorage.setItem("tasks", JSON.stringify(this.savedTasks));
     this.inputWriteTask.value = "";
     this.countInput.value = "";
-    this.countTask();
   }
 
   deleteTask(taskList, task) {
@@ -182,7 +193,6 @@ class TaskTableManager {
       this.savedTasks.splice(taskIndex, 1);
       localStorage.setItem("tasks", JSON.stringify(this.savedTasks));
     }
-    this.countTask();
   }
 
   cancleBtn(){
@@ -191,24 +201,19 @@ class TaskTableManager {
     })
   }
 
-  countTask() {
-    const count = this.savedTasks.length;
-    this.counterSpan.innerHTML = `#${count}`;
+  incrementCount(){
+    this.countInput.value++;
+    this.counterPomodoro();
   }
 
-    incrementCount(){
-      this.countInput.value++;
-      this.counterPomodoro();
+  decrementCount(){
+    this.countInput.value--;
+    if (this.countInput.value <= 1) {
+      this.countInput.value = 1;
     }
-
-    decrementCount(){
-      this.countInput.value--;
-      if (this.countInput.value <= 1) {
-        this.countInput.value = 1;
-      }
-      this.counterPomodoro();
-    }
-
+    this.counterPomodoro();
+  }
+  
     counterPomodoro() {
       let countPomodoro = document.querySelector(".count-pomodoro");
       if (countPomodoro) {

@@ -6,7 +6,7 @@ import Timer from "./Modules/Timer.js";
 import settingDOM from "./Modules/settingDOM.js";
 import ThemeManager from "./Modules/ThemeManager.js";
 import TimeDisplay from "./Modules/TimeDisplay.js";
-import TaskTableManager from "./Modules/taskTableManager.js";
+import TaskTableManager from "./Modules/TaskTableManager.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const timer = new Timer();
@@ -71,8 +71,10 @@ document.addEventListener("DOMContentLoaded", function () {
     startBtn.addEventListener("click", function () {
         if (!timer.timerInterval) {
             timer.start(currentTime, 0);
+            startBtn.textContent = "PAUSE"; 
         } else {
             timer.stop();
+            startBtn.textContent = "START";
         }
         console.log("clicked");
     });

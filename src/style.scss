@@ -62,7 +62,7 @@
   font-size: 30px;
   height: 55px;
   width: 200px;
-  color: rgba(13, 13, 13, 0.592);
+  color: rgba(13, 13, 13, 0.545);
   font-weight: bold;
   background-color: white;
   transition: color 0.5s ease-in-out 0s;
@@ -249,6 +249,7 @@
     margin-left: 32px;
     font-weight: bold;
   }
+
   .input-task {
     cursor: pointer;
     margin-left: 30px;
@@ -257,9 +258,13 @@
     font-style: italic;
     font-weight: bold;
     padding-top: 30px;
-    color: grey;
+    color: rgba(48, 47, 47, 0.778);
     padding-bottom: 30px;
     outline: none;
+
+    &::before{
+      color: rgba(128, 128, 128, 0.147);
+    }
   }
 
   .count-pomodoros {
@@ -328,12 +333,12 @@
   margin-top: 10px;
   margin-bottom: 10px;
 
-  &:hover {
-    background-color: bisque;
-  }
-
-  &:hover {
-    background-color: bisque;
+  &.highlighted {
+    background-color: #e8e4e4c8;
+    transform: scale(1.03);
+    transition:
+      background-color 0.3s,
+      transform 0.3s;
   }
 
   .do-task span {
@@ -388,7 +393,6 @@
   background-color: white;
   border-radius: 10px;
   margin-bottom: 20px;
- 
 
   span {
     color: black;

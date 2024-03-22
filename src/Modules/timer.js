@@ -1,5 +1,3 @@
-import settingDOM from "./settingDOM";
-const { CONFIG, timerInterval } = settingDOM();
 //Subject
 class Timer {
   constructor() {
@@ -17,30 +15,36 @@ class Timer {
   }
 
   notifyObserver(data) {
-    this.observers.forEach(observer => observer.update({ minutes: this.minutes, seconds: this.seconds }))//оповещение наблюдателей
-   
+    // this.observers.forEach(observer => observer.update({ minutes: this.minutes, seconds: this.seconds }))//оповещение наблюдателей
+    this.observers.forEach(observer => {
+      if (typeof observer.update === 'function') {
+        observer.update({ minutes: this.minutes, seconds: this.seconds });
+      } else {
+        console.error('Observer without update method:', observer);
+      }
+    });
   }
 
-  start(minutes, seconds) {
+  //проверка на запуск таймера
+  isRunning(){
+    return this.timerInterval !== null
+  }
+
+  start(milliseconds) {
     if (this.timerInterval !== null) return;
-    this.minutes = Number(minutes);
-    this.seconds = Number(seconds);
-
-    if (isNaN(this.minutes) || isNaN(this.seconds)) {
-      console.error("Неверное значение времени:", minutes, seconds);
-      return;
-  }
-
-    console.log("Таймер запущен:", this.minutes, "минут", this.seconds, "секунд");
+    this.minutes = Math.floor(milliseconds / 60000);
+    this.seconds = (milliseconds % 60000) / 1000;
     this.timerInterval = setInterval(() => {
       this.tick();
     }, 1000);
   }
 
   stop() {
-    clearInterval(this.timerInterval);
-    this.timerInterval = null;
-    console.log("Таймер остановлен");
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+   
   }
 
   tick() {
@@ -54,7 +58,6 @@ class Timer {
     } else {
       this.seconds--;
     }
-    console.log("Тик таймера:", this.minutes, "минут", this.seconds, "секунд"); 
     this.notifyObserver({ minutes: this.minutes, seconds: this.seconds });
  }
 }

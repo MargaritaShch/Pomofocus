@@ -3,100 +3,179 @@ import TimeDisplay from "./TimeDisplay";
 
 export default class UI {
    constructor(timer){
-        this.minuteElem = document.getElementById(this.minuteId);
-        this.secondElem = document.getElementById(this.secondId);
-        this.startBtn = document.querySelector(".start-btn");
         this.timer = timer;
+        this.timerDisplay = new TimeDisplay('min', 'sec');
+        this.savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        this.initializationDOMElements()
+        this.addEventListener();
+        this.getSavedTasks();
+        this.getThemeAndTimeFromLocalStorage()
+    }
+
+    initializationDOMElements(){
+        this.startBtn = document.querySelector(".start-btn");
+        this.body = document.querySelector("body");
         this.pomodoroButton = document.querySelector(".pomodoro-timer-btn");
         this.shortBreakButton = document.querySelector(".short-break-timer-btn");
         this.longBreakButton = document.querySelector(".long-break-timer-btn");
-        this.timerDisplay = new TimeDisplay('min', 'sec');
-        this.body = document.querySelector("body");
-        // this.addTaskButton = document.querySelector(".add-task");
-        // this.counterSpan = document.querySelector(".counter-tasks");
-        // this.timerInterval;
-        // this.saveBtn = document.querySelector(".save-btn");
-        // this.inputWriteTask = document.querySelector(".input-task");
-        // this.containerTask = document.querySelector(".container-task");
-        // this.containerForTask = document.querySelector(".container-for-task");
-        // this.openBtns = document.querySelectorAll(".open-task");
-        // this.plusBtn = document.querySelector(".plus-btn");
-        // this.minusBtn = document.querySelector(".minus-btn");
-        // this.countInput = document.querySelector(".count-pomodoros");
-        // this.ttFocus = document.querySelector(".tt-focus");
-        // this.correctPlusBtn = document.querySelector(".correct-plus-btn");
-        // this.correctMinusBtn = document.querySelector(".correct-minus-btn");
-        // this.correctSpan= document.querySelector( ".correct-span-task");
-        // this.correctCountPomodoros = document.querySelector(".correct-count-pomodoros1");
-        // this.containerForCorrectTask = document.querySelector(".container-for-correct-task");
-        // this.correctSaveBtn = document.querySelector(".correct-save-btn");
-        // this.correctDeleteBtn = document.querySelector(".correct-dethis.-btn");
-        // this.correctCancelBtn = document.querySelector(".correct-cancel-btn");
-        // this.minuteElem = document.getElementById("min");
-        // this.secondElem = document.getElementById("sec");
-        // this.pomodoroButton = document.querySelector(".pomodoro-timer-btn");
-        // this.shortBreakButton = document.querySelector(".short-break-timer-btn");
-        // this.longBreakButton = document.querySelector(".long-break-timer-btn");
+        this.minuteElem = document.getElementById(this.minuteId);
+        this.secondElem = document.getElementById(this.secondId);
+        this.addTaskButton = document.querySelector(".add-task");
+        this.containerForTask = document.querySelector(".container-for-task");
+        this.containerTask = document.querySelector(".container-task");
+        this.containerForCorrectTask = document.querySelector(".container-for-correct-task");
+        this.countInput = document.querySelector(".count-pomodoros");
+        this.correctSaveBtn = document.querySelector(".correct-save-btn");
+        this.saveBtn = document.querySelector(".save-btn");
+        this.correctCancelBtn = document.querySelector(".correct-cancel-btn");
+        this.cancelBtn = document.querySelector(".cancel-btn")
+        this.correctSpan= document.querySelector( ".correct-span-task");
+        this.correctCountPomodoros = document.querySelector(".correct-count-pomodoros1");
+        this.correctDeleteBtn = document.querySelector(".correct-delete-btn");
+        this.inputWriteTask = document.querySelector(".input-task");
+        this.ttFocus = document.querySelector(".tt-focus")
         this.currentTheme = 'POMODORO';
         this.CONFIG = {
-            POMODORO: {
-            time: 25,
-            themeId: "pomodoro-break-timer",
-            },
-            SHORT_BREAK: {
-            time: 5,
-            themeId: "short-break-timer",
-            },
-            LONG_BREAK: {
-            time: 15,
-            themeId: "long-break-timer",
-            },
+            POMODORO: { time: 25, themeId: "pomodoro-break-timer" },
+            SHORT_BREAK: { time: 5, themeId: "short-break-timer" },
+            LONG_BREAK: { time: 15, themeId: "long-break-timer" },
         };
-        this.initialization();
     }
 
-    initialization (){
+    addEventListener(){
         this.startBtn.addEventListener("click",  () =>{
             this.toggleTimer()
         });
         this.pomodoroButton.addEventListener("click", () => this.changeTheme('POMODORO'));
         this.shortBreakButton.addEventListener("click", () => this.changeTheme('SHORT_BREAK'));
         this.longBreakButton.addEventListener("click", () => this.changeTheme('LONG_BREAK'));
+        this.addTaskButton.addEventListener("click", () => this.toggleTaskContainer());
+        this.saveBtn.addEventListener("click", (event) => this.saveTask(event));
+        this.correctCancelBtn.addEventListener("click", () => this.containerForCorrectTask.style.display = "none");
+        this.cancelBtn.addEventListener("click", () => this.containerForTask.style.display = "none");
+        this.correctSaveBtn.addEventListener("click", (event)=> this.saveTask(event));
     }
 
-    saveThemeAndTimeToLocalStorage(){
-        localStorage.setItem('themeAndTime', JSON.stringify({
-            theme: this.currentTheme,
-            time: this.CONFIG[this.currentTheme].time
-          }));
+    toggleTaskContainer() {
+        this.containerForTask.style.display = this.containerForTask.style.display === "none" ? "block" : "none";
     }
 
-    getThemeAndTimeFromLocalStorage(){
-        const savedThemeAndTime = JSON.parse(localStorage.getItem('themeAndTime'));
-        if (savedThemeAndTime && this.CONFIG.hasOwnProperty(savedThemeAndTime.theme)) {
-            this.changeTheme(savedThemeAndTime.theme);
-            } else {
-            //тема по умолчанию
-            this.changeTheme('POMODORO');
-            }
+    saveTask(event) {
+        event.preventDefault();
+        const textInput = this.inputWriteTask.value;
+        const pomodoroCount = this.countInput.value || 1;
+        if (textInput.trim() === "") {
+            alert("Please, add your text");
+            return;
+        }
+        const task = { 
+            id: Date.now(), 
+            textInput,
+            pomodoroCount, 
+        };
+        this.savedTasks.push(task);
+        localStorage.setItem("tasks", JSON.stringify(this.savedTasks));
+        this.getSavedTasks();
+        this.inputWriteTask.value = "";
+        this.countInput.value = "1";
+        this.toggleTaskContainer();
     }
 
-    changeTheme(theme) {
-        const themeConfig = this.CONFIG[theme];
-        this.currentTheme = theme;
-        this.body.classList.remove("pomodoro-timer", "short-break-timer", "long-break-timer");
-        this.body.classList.add(themeConfig.themeId);
-        this.timerDisplay.update({ minutes: themeConfig.time, seconds: 0 });
-        this.timer.stop();
-        this.saveThemeAndTimeToLocalStorage();
+    getSavedTasks() {
+        this.containerTask.innerHTML = '';
+        this.savedTasks.forEach((task, index) => {
+            const taskElement = this.createTaskElement(task, index);
+            this.containerTask.appendChild(taskElement);
+        });
     }
 
-    update(time) {
-        //если эл-ты есть
-        if (this.minuteElem && this.secondElem) { 
-            this.minuteElem.textContent = time.minutes.toString().padStart(2, "0");
-            this.secondElem.textContent = time.seconds.toString().padStart(2, "0");
+    createTaskElement(task, index) {
+        const taskList = document.createElement("div");
+        taskList.classList.add("task-list");
+        taskList.setAttribute("draggable", "true");
+        taskList.setAttribute("data-id", task.id);
+        taskList.innerHTML = `
+          <div class="do-task">
+            <span>${task.textInput}</span>
+          </div>
+          <div class="right-side">
+            <span class="use-pmodoro">0</span><span class ="count-pomodoro">/${task.pomodoroCount}</span> 
+            <button class="open-task">open</button>
+            <button class="delete-task">&#10006;</button>
+          </div>`;
+    
+        const openBtn = taskList.querySelector(".open-task");
+        openBtn.addEventListener("click", () => {
+            this.containerForTask.remove()
+            this.containerForCorrectTask.style.display = "block";
+            this.correctSpan.textContent = task.textInput; 
+        });
+    
+        this.correctDeleteBtn.addEventListener("click", ()=> {
+          this.deleteTask(taskList, task)
+        })
+    
+        const taskContent = taskList.querySelector('.do-task span'); 
+        taskList.addEventListener('click', () => {
+          const highlighted = document.querySelector('.task-list.highlighted');
+          if (highlighted) {
+              highlighted.classList.remove('highlighted'); 
           }
+          taskList.classList.add('highlighted'); 
+          this.ttFocus.textContent = taskContent.textContent; 
+        })
+        //click DEL btns in task
+        const deleteBtn = taskList.querySelector(".delete-task");
+        deleteBtn.addEventListener("click", ()=>{
+           this.deleteTask(taskList, task)
+        })
+
+        taskList.addEventListener("dragstart", (e) => {
+            e.dataTransfer.setData("text/plain", task.id);
+        });
+    
+        //dragover и drop 
+        this.containerTask.addEventListener("dragover", (e) => {
+            e.preventDefault(); 
+            e.dataTransfer.dropEffect = "move";
+        });
+    
+        this.containerTask.addEventListener("drop", (e) => {
+            e.preventDefault();
+            const taskId = e.dataTransfer.getData("text/plain");
+            const targetTask = this.containerTask.querySelector(`[data-id='${taskId}']`);
+            //найти ближайшую задачу
+            const closestTask = e.target.closest(".task-list");
+    
+            if (closestTask && targetTask !== closestTask) {
+                //перетащить задачу и сбросит место
+                this.containerTask.insertBefore(targetTask, closestTask);
+                this.updateTasksOrder();
+            }
+        });
+        return taskList;
+    }
+    //обновит очередь задач
+    updateTasksOrder() {
+        const updatedTasks = [];
+        const tasksElements = this.containerTask.querySelectorAll(".task-list");
+    
+        tasksElements.forEach(taskElement => {
+            const taskId = taskElement.getAttribute("data-id");
+            const task = this.savedTasks.find(t => t.id == taskId);
+            if (task) {
+                updatedTasks.push(task);
+            }
+        });
+    
+        this.savedTasks = updatedTasks;
+        localStorage.setItem("tasks", JSON.stringify(this.savedTasks));
+    }
+
+    deleteTask(index) {
+        this.savedTasks.splice(index, 1);
+        localStorage.setItem("tasks", JSON.stringify(this.savedTasks));
+        this.getSavedTasks();
     }
 
     toggleTimer(){
@@ -110,6 +189,39 @@ export default class UI {
         }
         console.log("Timer toggled");
     }
-}
 
-   
+    changeTheme(theme) {
+        const themeConfig = this.CONFIG[theme];
+        this.currentTheme = theme;
+        this.body.classList.remove("pomodoro-timer", "short-break-timer", "long-break-timer");
+        this.body.classList.add(themeConfig.themeId);
+        this.timerDisplay.update({ minutes: themeConfig.time, seconds: 0 });
+        this.timer.stop();
+        this.saveThemeAndTimeToLocalStorage();
+    }
+
+    getThemeAndTimeFromLocalStorage(){
+        const savedThemeAndTime = JSON.parse(localStorage.getItem('themeAndTime'));
+        if (savedThemeAndTime && this.CONFIG.hasOwnProperty(savedThemeAndTime.theme)) {
+            this.changeTheme(savedThemeAndTime.theme);
+            } else {
+            //тема по умолчанию
+            this.changeTheme('POMODORO');
+            }
+    }
+
+    saveThemeAndTimeToLocalStorage(){
+        localStorage.setItem('themeAndTime', JSON.stringify({
+            theme: this.currentTheme,
+            time: this.CONFIG[this.currentTheme].time
+          }));
+    }
+
+    update(time) {
+        //если эл-ты есть
+        if (this.minuteElem && this.secondElem) { 
+            this.minuteElem.textContent = time.minutes.toString().padStart(2, "0");
+            this.secondElem.textContent = time.seconds.toString().padStart(2, "0");
+        }
+    }
+} 

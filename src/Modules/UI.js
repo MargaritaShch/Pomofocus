@@ -1,15 +1,12 @@
-import TimeDisplay from "./TimeDisplay";
-
-
 export default class UI {
    constructor(timer){
         this.timer = timer;
-        this.timerDisplay = new TimeDisplay('min', 'sec');
         this.savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
         this.initializationDOMElements()
         this.addEventListener();
         this.getSavedTasks();
         this.getThemeAndTimeFromLocalStorage()
+        timer.subscribe(this)
     }
 
     initializationDOMElements(){
@@ -18,8 +15,8 @@ export default class UI {
         this.pomodoroButton = document.querySelector(".pomodoro-timer-btn");
         this.shortBreakButton = document.querySelector(".short-break-timer-btn");
         this.longBreakButton = document.querySelector(".long-break-timer-btn");
-        this.minuteElem = document.getElementById(this.minuteId);
-        this.secondElem = document.getElementById(this.secondId);
+        this.minuteElem = document.getElementById("min");
+        this.secondElem = document.getElementById("sec");
         this.addTaskButton = document.querySelector(".add-task");
         this.containerForTask = document.querySelector(".container-for-task");
         this.containerTask = document.querySelector(".container-task");
@@ -195,7 +192,7 @@ export default class UI {
         this.currentTheme = theme;
         this.body.classList.remove("pomodoro-timer", "short-break-timer", "long-break-timer");
         this.body.classList.add(themeConfig.themeId);
-        this.timerDisplay.update({ minutes: themeConfig.time, seconds: 0 });
+         this.updateTimeDisplay( themeConfig.time,  0 );
         this.timer.stop();
         this.saveThemeAndTimeToLocalStorage();
     }
@@ -217,11 +214,12 @@ export default class UI {
           }));
     }
 
-    update(time) {
-        //если эл-ты есть
-        if (this.minuteElem && this.secondElem) { 
-            this.minuteElem.textContent = time.minutes.toString().padStart(2, "0");
-            this.secondElem.textContent = time.seconds.toString().padStart(2, "0");
-        }
+    updateTimeDisplay(minutes, seconds) {
+            this.minuteElem.textContent = minutes.toString().padStart(2, "0");
+            this.secondElem.textContent = seconds.toString().padStart(2, "0");
+    }
+
+    update(time){
+        this.updateTimeDisplay(time.minutes, time.seconds)
     }
 } 

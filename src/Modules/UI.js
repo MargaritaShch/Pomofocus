@@ -33,9 +33,9 @@ export default class UI {
         this.ttFocus = document.querySelector(".tt-focus")
         this.currentTheme = 'POMODORO';
         this.CONFIG = {
-            POMODORO: { time: 25, themeId: "pomodoro-break-timer" },
-            SHORT_BREAK: { time: 5, themeId: "short-break-timer" },
-            LONG_BREAK: { time: 15, themeId: "long-break-timer" },
+            POMODORO: { time: 25 * 60 * 1000, themeId: "pomodoro-break-timer" },
+            SHORT_BREAK: { time: 5 * 60 * 1000, themeId: "short-break-timer" },
+            LONG_BREAK: { time: 15 * 60 * 1000, themeId: "long-break-timer" },
         };
     }
 
@@ -177,8 +177,8 @@ export default class UI {
 
     toggleTimer(){
         if (!this.timer.isRunning()) {
-            const timeInMinutes = this.CONFIG[this.currentTheme].time;
-            this.timer.start(timeInMinutes * 60 * 1000); //перевод в милесекунды
+            const timeInMilliseconds = this.CONFIG[this.currentTheme].time;
+            this.timer.start(timeInMilliseconds); //перевод в милесекунды
             this.startBtn.textContent = "PAUSE";
         } else {
             this.timer.stop();
@@ -192,7 +192,9 @@ export default class UI {
         this.currentTheme = theme;
         this.body.classList.remove("pomodoro-timer", "short-break-timer", "long-break-timer");
         this.body.classList.add(themeConfig.themeId);
-         this.updateTimeDisplay( themeConfig.time,  0 );
+        const minutes = Math.floor(themeConfig.time/60000)
+        const seconds = Math.floor((themeConfig.time % 60000)/1000)
+        this.updateTimeDisplay( minutes,  seconds );
         this.timer.stop();
         this.saveThemeAndTimeToLocalStorage();
     }

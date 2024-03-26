@@ -1,11 +1,14 @@
+import Tasks from "./Tasks";
+
 export default class UI {
    constructor(timer){
         this.timer = timer;
-        this.savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        this.tasks = new Tasks()
         this.initializationDOMElements()
         this.addEventListener();
-        this.getSavedTasks();
+        this.tasks.loadTasks();
         this.getThemeAndTimeFromLocalStorage()
+        this.displayTasks()
         timer.subscribe(this)
     }
 
@@ -65,25 +68,20 @@ export default class UI {
             alert("Please, add your text");
             return;
         }
-        const task = { 
-            id: Date.now(), 
-            textInput,
-            pomodoroCount, 
-        };
-        this.savedTasks.push(task);
-        localStorage.setItem("tasks", JSON.stringify(this.savedTasks));
-        this.getSavedTasks();
+        this.tasks.addTask(textInput, pomodoroCount); 
         this.inputWriteTask.value = "";
         this.countInput.value = "1";
+        this.displayTasks(); 
         this.toggleTaskContainer();
     }
 
-    getSavedTasks() {
-        this.containerTask.innerHTML = '';
-        this.savedTasks.forEach((task, index) => {
+    displayTasks() {
+        const tasks = this.tasks.getTasks();
+        this.containerTask.innerHTML = ''; 
+        tasks.forEach((task, index) => {
             const taskElement = this.createTaskElement(task, index);
             this.containerTask.appendChild(taskElement);
-        });
+    });
     }
 
     createTaskElement(task, index) {
@@ -124,7 +122,8 @@ export default class UI {
         //click DEL btns in task
         const deleteBtn = taskList.querySelector(".delete-task");
         deleteBtn.addEventListener("click", ()=>{
-           this.deleteTask(taskList, task)
+           this.tasks.deleteTask(task.id)
+           this.displayTasks()
         })
 
         taskList.addEventListener("dragstart", (e) => {
@@ -151,28 +150,6 @@ export default class UI {
             }
         });
         return taskList;
-    }
-    //обновит очередь задач
-    updateTasksOrder() {
-        const updatedTasks = [];
-        const tasksElements = this.containerTask.querySelectorAll(".task-list");
-    
-        tasksElements.forEach(taskElement => {
-            const taskId = taskElement.getAttribute("data-id");
-            const task = this.savedTasks.find(t => t.id == taskId);
-            if (task) {
-                updatedTasks.push(task);
-            }
-        });
-    
-        this.savedTasks = updatedTasks;
-        localStorage.setItem("tasks", JSON.stringify(this.savedTasks));
-    }
-
-    deleteTask(index) {
-        this.savedTasks.splice(index, 1);
-        localStorage.setItem("tasks", JSON.stringify(this.savedTasks));
-        this.getSavedTasks();
     }
 
     toggleTimer(){

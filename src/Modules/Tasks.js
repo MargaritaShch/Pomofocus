@@ -8,10 +8,37 @@ class Tasks {
     this.correctSpan = document.querySelector(".counter-tasks");
     this.correctPlusBtn = document.querySelector(".correct-plus-btn");
     this.correctMinusBtn = document.querySelector(".correct-minus-btn");
-    this.savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    this.loadTasks()
     this.callEventListener();
   }
 
+  loadTasks() {
+    this.savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  }
+
+  saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(this.savedTasks));
+  }
+
+  //get current tasl list
+  getTasks() {
+    return this.savedTasks;
+  }
+
+  addTask(textInput, pomodoroCount) {
+    const task = {
+      id: Date.now(),
+      textInput,
+      pomodoroCount,
+    };
+    this.savedTasks.push(task);
+    this.saveTasks();
+  }
+
+  deleteTask(taskId) {
+    this.savedTasks = this.savedTasks.filter(task => task.id !== taskId);
+    this.saveTasks();
+  }
   //btns
   callEventListener() {
     this.plusBtn.addEventListener("click", () => {

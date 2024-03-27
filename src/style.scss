@@ -6,7 +6,7 @@
 #theme {
   background-color: rgb(186, 73, 73);
   color: white;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Nunito Sans", sans-serif;
 }
 
 .main-title {
@@ -15,6 +15,26 @@
   padding-top: 50px;
   margin-bottom: 50px;
 }
+
+.time-bar{
+ 
+  border-bottom: 2px solid rgba(78, 62, 62, 0.693);
+  margin-left: 30%;
+  margin-right: 30%;
+  height: 4px;
+  margin-bottom: 20px;
+
+  #progressBar {
+    width: 0%;
+    height: 2px;
+    background: white;
+    transition: width 1s ease-in-out;
+  }
+}
+
+
+
+
 
 .table {
   margin: auto;
@@ -467,7 +487,7 @@
 }
 
 .container-discribe {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   padding-top: 20px;
   background-color: white;
   color: hsl(357, 50%, 22%);
@@ -492,7 +512,6 @@
   }
   li {
     font-size: 18px;
-    letter-spacing: 2px;
     color: hsl(357, 50%, 22%);
     padding-top: 10px;
   }
@@ -500,7 +519,6 @@
   p {
     padding-top: 10px;
     font-size: 18px;
-    letter-spacing: 2px;
   }
   .main-title {
     max-width: 620px;

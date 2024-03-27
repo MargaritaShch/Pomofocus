@@ -5,6 +5,10 @@ class Timer {
     this.timerInterval = null;
     this.minutes = 0;
     this.seconds = 0;
+    //все время в мс
+    this.totalTime = 0; 
+    //прошедшее время
+    this.elapsedTime = 0; 
   }
   subscribe(observer) {
     this.observers.push(observer)//подписка на наблюдателей
@@ -14,11 +18,10 @@ class Timer {
     this.observers = this.observers.filter(item => item !== observer)//отписка от наблюдателей
   }
 
-  notifyObserver(data) {
-    // this.observers.forEach(observer => observer.update({ minutes: this.minutes, seconds: this.seconds }))//оповещение наблюдателей
+  notifyObserver({minutes,seconds,percentComplete}) {
     this.observers.forEach(observer => {
       if (typeof observer.update === 'function') {
-        observer.update({ minutes: this.minutes, seconds: this.seconds });
+        observer.update({ minutes, seconds, percentComplete});
       } else {
         console.error('Observer without update method:', observer);
       }
@@ -32,6 +35,8 @@ class Timer {
 
   start(milliseconds) {
     if (this.timerInterval !== null) return;
+    this.totalTime = milliseconds;
+    this.elapsedTime = 0;
     this.minutes = Math.floor(milliseconds / 60000);
     this.seconds = (milliseconds % 60000) / 1000;
     this.timerInterval = setInterval(() => {
@@ -58,7 +63,9 @@ class Timer {
     } else {
       this.seconds--;
     }
-    this.notifyObserver({ minutes: this.minutes, seconds: this.seconds });
+    this.elapsedTime += 1000;
+    const percentComplete = (this.elapsedTime / this.totalTime) * 100;
+    this.notifyObserver({ minutes: this.minutes, seconds: this.seconds, percentComplete  });
  }
 }
 

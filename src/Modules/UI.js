@@ -36,7 +36,7 @@ export default class UI {
         this.ttFocus = document.querySelector(".tt-focus")
         this.currentTheme = 'POMODORO';
         this.CONFIG = {
-            POMODORO: { time: 25 * 60 * 1000, themeId: "pomodoro-break-timer" },
+            POMODORO: { time: 1 * 60 * 1000, themeId: "pomodoro-break-timer" },
             SHORT_BREAK: { time: 5 * 60 * 1000, themeId: "short-break-timer" },
             LONG_BREAK: { time: 15 * 60 * 1000, themeId: "long-break-timer" },
         };
@@ -155,7 +155,7 @@ export default class UI {
     toggleTimer(){
         if (!this.timer.isRunning()) {
             const timeInMilliseconds = this.CONFIG[this.currentTheme].time;
-            this.timer.start(timeInMilliseconds); //перевод в милесекунды
+            this.timer.start(timeInMilliseconds);
             this.startBtn.textContent = "PAUSE";
         } else {
             this.timer.stop();
@@ -197,8 +197,16 @@ export default class UI {
             this.minuteElem.textContent = minutes.toString().padStart(2, "0");
             this.secondElem.textContent = seconds.toString().padStart(2, "0");
     }
-
-    update(time){
-        this.updateTimeDisplay(time.minutes, time.seconds)
+    
+    update({minutes,seconds,percentComplete}){
+        this.updateTimeDisplay(minutes, seconds)
+        this.updateProgressBar(percentComplete);
     }
-} 
+
+    updateProgressBar(percentComplete) {
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar) {
+            progressBar.style.width = `${percentComplete}%`;
+        }
+    } 
+}

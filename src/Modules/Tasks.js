@@ -20,7 +20,7 @@ class Tasks {
     localStorage.setItem("tasks", JSON.stringify(this.savedTasks));
   }
 
-  //get current tasl list
+  //get current tasks list
   getTasks() {
     return this.savedTasks;
   }
@@ -50,7 +50,6 @@ class Tasks {
     });
   }
 
-  //ОСТАВИТЬ
   updateTaskCount(count) {
     const pomodoroSpan = this.taskList.querySelector(".count-pomodoro");
     pomodoroSpan.textContent = `/${count}`;

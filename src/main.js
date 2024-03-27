@@ -1,7 +1,7 @@
-import "./style.scss";
-import "./pomodoro-timer.scss";
-import "./short-break-timer.scss";
-import "./long-break-timer.scss";
+import "./style.scss"
+import "./style/pomodoro-timer.scss";
+import "./style/short-break-timer.scss";
+import "./style/long-break-timer.scss" 
 import Timer from "./Modules/Timer.js";
 import UI from "./Modules/UI.js";
 

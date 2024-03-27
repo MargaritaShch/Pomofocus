@@ -1,3 +1,4 @@
+import { check } from "prettier";
 import Tasks from "./Tasks";
 
 export default class UI {
@@ -91,14 +92,26 @@ export default class UI {
         taskList.setAttribute("data-id", task.id);
         taskList.innerHTML = `
           <div class="do-task">
+          <input type="checkbox" class = "checkbox" >
             <span>${task.textInput}</span>
           </div>
           <div class="right-side">
+           
             <span class="use-pmodoro">0</span><span class ="count-pomodoro">/${task.pomodoroCount}</span> 
             <button class="open-task">open</button>
             <button class="delete-task">&#10006;</button>
           </div>`;
-    
+        
+          const checkbox = taskList.querySelector('.checkbox');
+          const textSpan = taskList.querySelector('.do-task span');
+          checkbox.addEventListener("change", () => {
+              if (checkbox.checked) {
+                  textSpan.style.textDecoration = "line-through";
+              } else {
+                  textSpan.style.textDecoration = "none";
+              }
+              taskList.parentNode.appendChild(taskList);
+        })
         const openBtn = taskList.querySelector(".open-task");
         openBtn.addEventListener("click", () => {
             this.containerForTask.remove()

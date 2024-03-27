@@ -13,7 +13,7 @@
   display: flex;
   justify-content: center;
   padding-top: 50px;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
 .time-bar{
@@ -31,10 +31,6 @@
     transition: width 1s ease-in-out;
   }
 }
-
-
-
-
 
 .table {
   margin: auto;
@@ -89,18 +85,12 @@
   min-height: 55px;
 }
 
-// .number-task {
-//   padding-top: 20px;
-//   color: rgba(86, 82, 82, 0.503);
-// }
 
 .counter-tasks {
   font-size: 20px;
   color: white;
-  // font-weight: bold;
   font-size: 20px;
   color: white;
-  // font-weight: bold;
   display: flex;
   justify-content: center;
   padding-top: 20px;
@@ -345,12 +335,13 @@
 
 .task-list {
   display: flex;
+  align-items: center; 
+  justify-content: space-between; 
   width: 520px;
-  height: 60px;
+  height: 50px;
   margin: auto;
   background: white;
   border-radius: 5px;
-  margin-top: 10px;
   margin-bottom: 10px;
 
   &.highlighted {
@@ -361,21 +352,33 @@
       transform 0.3s;
   }
 
+  .do-task{
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    padding-bottom: 15px;
+  }
   .do-task span {
     font-weight: bold;
-    padding-top: 5px;
+    padding-left: 20px;
   }
-
+  .checkbox{
+    border: 0.5px solid grey;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: left;
+  }
   .right-side {
     display: flex;
-    justify-content: end;
+    align-items: center; 
+    margin-right: 15px; 
 
     .use-pmodoro,
     .count-pomodoro {
       font-weight: bold;
       color: grey;
       font-size: 20px;
-      padding-top: 20px;
     }
 
     .count-pomodoro {
@@ -383,8 +386,8 @@
     }
 
     .delete-task {
-      margin-top: 15px;
       margin-left: 30px;
+      margin-bottom: 8px;
       cursor: pointer;
       width: 30px;
       height: 30px;
@@ -394,7 +397,6 @@
     }
 
     .open-task {
-      margin-top: 15px;
       margin-left: 30px;
       cursor: pointer;
       width: 40px;
@@ -409,7 +411,7 @@
 .container-for-correct-task {
   margin: auto;
   width: 520px;
-  height: 280px;
+  height: 220px;
   background-color: white;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -428,26 +430,25 @@
     font-size: 30px;
     font-style: italic;
     font-weight: bold;
-    padding-top: 30px;
     color: black;
     outline: none;
   }
 
   .correct-count-pomodoros,
   .correct-count-pomodoros1 {
-    border-radius: 10px;
-    padding: 10px;
-    border: 0.5px solid grey;
+    border-radius: 5px;
+    padding: 7px;
+    border: 0.5px solid rgba(128, 128, 128, 0.785);
     margin-left: 30px;
-    width: 40px;
-    height: 30px;
+    width: 50px;
+    height: 28px;
     background-color: rgba(128, 128, 128, 0.382);
   }
 
   .correct-plus-btn,
   .correct-minus-btn {
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 5px;
     border: none;
     box-shadow: 2px 2px 2px 2px grey;
     width: 50px;

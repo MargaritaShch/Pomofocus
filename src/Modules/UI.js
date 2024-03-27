@@ -1,4 +1,3 @@
-import { check } from "prettier";
 import Tasks from "./Tasks";
 
 export default class UI {
@@ -35,9 +34,11 @@ export default class UI {
         this.correctDeleteBtn = document.querySelector(".correct-delete-btn");
         this.inputWriteTask = document.querySelector(".input-task");
         this.ttFocus = document.querySelector(".tt-focus")
+        //хранить выбранную задачу
+        this.activeTaskId = null;
         this.currentTheme = 'POMODORO';
         this.CONFIG = {
-            POMODORO: { time: 1 * 60 * 1000, themeId: "pomodoro-break-timer" },
+            POMODORO: { time: 0.1 * 60 * 1000, themeId: "pomodoro-break-timer" },
             SHORT_BREAK: { time: 5 * 60 * 1000, themeId: "short-break-timer" },
             LONG_BREAK: { time: 15 * 60 * 1000, themeId: "long-break-timer" },
         };
@@ -90,20 +91,30 @@ export default class UI {
         taskList.classList.add("task-list");
         taskList.setAttribute("draggable", "true");
         taskList.setAttribute("data-id", task.id);
+        //для отображение чекбокса с выполнеными помидорками
+
         taskList.innerHTML = `
           <div class="do-task">
-          <input type="checkbox" class = "checkbox" >
-            <span>${task.textInput}</span>
+          <input type="checkbox" class = "checkbox">
+            <span >${task.textInput}</span>
           </div>
           <div class="right-side">
            
-            <span class="use-pmodoro">0</span><span class ="count-pomodoro">/${task.pomodoroCount}</span> 
+            <span class="use-pmodoro">${task.completedPomodoros || 0}</span><span class ="count-pomodoro">/${task.pomodoroCount}</span> 
             <button class="open-task">open</button>
             <button class="delete-task">&#10006;</button>
           </div>`;
         
+        
           const checkbox = taskList.querySelector('.checkbox');
           const textSpan = taskList.querySelector('.do-task span');
+          // автоматическое отображение чекбокса при выполненно лимите помидорок
+          if (task.completedPomodoros >= task.pomodoroCount) {
+            checkbox.checked = true; 
+            textSpan.style.textDecoration = "line-through"; 
+        }
+
+        //отображение чекбокса
           checkbox.addEventListener("change", () => {
               if (checkbox.checked) {
                   textSpan.style.textDecoration = "line-through";
@@ -112,6 +123,7 @@ export default class UI {
               }
               taskList.parentNode.appendChild(taskList);
         })
+        //отображение контейнера для настройки задачи искрытие контейнара для корректирвки задачи
         const openBtn = taskList.querySelector(".open-task");
         openBtn.addEventListener("click", () => {
             this.containerForTask.remove()
@@ -131,6 +143,8 @@ export default class UI {
           }
           taskList.classList.add('highlighted'); 
           this.ttFocus.textContent = taskContent.textContent; 
+          //сохранить выбранную задачу
+          this.activeTaskId = task.id; 
         })
         //click DEL btns in task
         const deleteBtn = taskList.querySelector(".delete-task");
@@ -159,13 +173,25 @@ export default class UI {
             if (closestTask && targetTask !== closestTask) {
                 //перетащить задачу и сбросит место
                 this.containerTask.insertBefore(targetTask, closestTask);
-                this.updateTasksOrder();
+               
             }
         });
+
+        const usedPomodorosSpan = taskList.querySelector('.use-pmodoro');
+        usedPomodorosSpan.textContent = task.completedPomodoros;
+
         return taskList;
     }
 
     toggleTimer(){
+        //проверка на д=лимит
+        const activeTask = this.tasks.savedTasks.find(task => task.id === this.activeTaskId);
+        if (activeTask && activeTask.completedPomodoros >= activeTask.pomodoroCount) {
+            alert("Достигнут лимит помидорок для этой задачи");
+            return; 
+        }
+
+
         if (!this.timer.isRunning()) {
             const timeInMilliseconds = this.CONFIG[this.currentTheme].time;
             this.timer.start(timeInMilliseconds);
@@ -173,8 +199,10 @@ export default class UI {
         } else {
             this.timer.stop();
             this.startBtn.textContent = "START";
+            if (this.activeTaskId !== null) {
+                this.displayTasks(); 
+              }
         }
-        console.log("Timer toggled");
     }
 
     changeTheme(theme) {
@@ -211,11 +239,29 @@ export default class UI {
             this.secondElem.textContent = seconds.toString().padStart(2, "0");
     }
     
-    update({minutes,seconds,percentComplete}){
-        this.updateTimeDisplay(minutes, seconds)
-        this.updateProgressBar(percentComplete);
+    getUsedPomodoro() {
+        if (this.activeTaskId) {
+            this.tasks.handlePomodoroComplete(this.activeTaskId);
+            this.displayTasks(); 
+        }
     }
-
+    update(data){
+        //если время закончилось само обновляется таймер, кнопка и прогресс бар до начального состояния
+        if (data.type === 'POMODORO_COMPLETE') {
+            this.startBtn.textContent = "START";
+            const themeConfig = this.CONFIG[this.currentTheme];
+            const minutes = Math.floor(themeConfig.time / 60000);
+            const seconds = Math.floor((themeConfig.time % 60000) / 1000);
+            this.updateTimeDisplay(minutes, seconds);
+            //сбросить прогрессбар
+            this.updateProgressBar(0); 
+            this.getUsedPomodoro(); 
+        } else if (data.type === 'TICK') {
+            this.updateTimeDisplay(data.minutes, data.seconds);
+            this.updateProgressBar(data.percentComplete);
+        }
+    }
+    //отсчет времени в прогресс бар
     updateProgressBar(percentComplete) {
         const progressBar = document.getElementById('progressBar');
         if (progressBar) {

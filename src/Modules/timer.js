@@ -18,10 +18,10 @@ class Timer {
     this.observers = this.observers.filter(item => item !== observer)//отписка от наблюдателей
   }
 
-  notifyObserver({minutes,seconds,percentComplete}) {
+  notifyObserver({minutes,seconds,percentComplete,type}) {
     this.observers.forEach(observer => {
       if (typeof observer.update === 'function') {
-        observer.update({ minutes, seconds, percentComplete});
+        observer.update({ minutes, seconds, percentComplete, type});
       } else {
         console.error('Observer without update method:', observer);
       }
@@ -55,17 +55,19 @@ class Timer {
   tick() {
     if (this.seconds === 0) {
       if (this.minutes === 0) {
-        this.stop();
-        return;
+          clearInterval(this.timerInterval);
+          this.timerInterval = null;
+          this.notifyObserver({type: "POMODORO_COMPLETE"});
+          return;
       }
       this.minutes--;
       this.seconds = 59;
-    } else {
+  } else {
       this.seconds--;
-    }
-    this.elapsedTime += 1000;
-    const percentComplete = (this.elapsedTime / this.totalTime) * 100;
-    this.notifyObserver({ minutes: this.minutes, seconds: this.seconds, percentComplete  });
+  }
+  this.elapsedTime += 1000;
+  const percentComplete = (this.elapsedTime / this.totalTime) * 100;
+  this.notifyObserver({ minutes: this.minutes, seconds: this.seconds, percentComplete, type: "TICK" });
  }
 }
 

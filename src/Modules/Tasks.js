@@ -29,6 +29,7 @@ class Tasks {
     const task = {
       id: Date.now(),
       textInput,
+      completedPomodoros: 0,
       pomodoroCount,
     };
     this.savedTasks.push(task);
@@ -73,6 +74,20 @@ class Tasks {
     if (countPomodoro) {
       countPomodoro.innerHTML = `/${this.countInput.value}`;
     }
+  }
+
+  //управление использованными помидорками
+  handlePomodoroComplete(activeTaskId) {
+    const task = this.savedTasks.find(task => task.id === activeTaskId);
+    if (task) {
+        task.completedPomodoros = (task.completedPomodoros || 0) + 1;
+        this.saveTasks();
+        //если кол-во заданных и потраченных помидорок равны 
+        if(task.completedPomodoros === task.pomodoroCount){
+          //то задача выполнена
+          task.isComplite = true
+        }
+  }
   }
 }
 

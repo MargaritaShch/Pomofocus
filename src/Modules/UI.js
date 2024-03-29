@@ -1,16 +1,19 @@
 import Tasks from "./Tasks";
-import  CONFIG, { POMODORO, SHORT_BREAK, LONG_BREAK }  from "../tamplates/config";
+import  CONFIG, { POMODORO, SHORT_BREAK, LONG_BREAK }  from "../templates/config";
+import { createTaskElement } from '../templates/createTask';
 
 export default class UI {
    constructor(timer){
         this.timer = timer;
         this.tasks = new Tasks()
         this.initializationDOMElements()
+        
         this.addEventListener();
         this.tasks.loadTasks();
         this.getThemeAndTimeFromLocalStorage()
         this.displayTasks()
         timer.subscribe(this)
+        this.settingsDragAndDrop()
     }
 
     initializationDOMElements(){
@@ -60,6 +63,57 @@ export default class UI {
         this.minusBtn.addEventListener("click", () => this.decrementCount());
     }
 
+    addEventListenerForTask(taskElement, task) {
+        const checkbox = taskElement.querySelector('.checkbox');
+        const openBtn = taskElement.querySelector('.open-task');
+        const deleteBtn = taskElement.querySelector('.delete-task');
+        const textSpan = taskElement.querySelector('.do-task span');
+        const usedPomodorosSpan = taskElement.querySelector('.use-pmodoro');
+          // автоматическое отображение чекбокса при выполненно лимите помидорок
+          if (task.completedPomodoros >= task.pomodoroCount) {
+            checkbox.checked = true; 
+            textSpan.style.textDecoration = "line-through"; 
+        }
+
+        //отображение чекбокса
+          checkbox.addEventListener("change", (event) => {
+            const isCompleted = event.target.checked;
+            taskElement.parentNode.appendChild(taskElement);
+        })
+
+        
+        //отображение контейнера для настройки задачи и скрытие контейнара для корректирвки задачи
+        openBtn.addEventListener("click", () => {
+            this.containerForTask.remove()
+            this.containerForCorrectTask.style.display = "block";
+            this.correctSpan.textContent = task.textInput; 
+        });
+    
+        deleteBtn.addEventListener("click", ()=>{
+            this.tasks.deleteTask(task.id)
+            this.displayTasks()
+         })
+
+        usedPomodorosSpan.textContent = task.completedPomodoros;
+    
+        taskElement.addEventListener('click', () => {
+          const highlighted = document.querySelector('.task-list.highlighted');
+          if (highlighted) {
+              highlighted.classList.remove('highlighted'); 
+          }
+          taskElement.classList.add('highlighted'); 
+          this.ttFocus.textContent = textSpan.textContent; 
+          //сохранить выбранную задачу
+          this.activeTaskId = task.id; 
+        })
+        
+        taskElement.addEventListener("dragstart", (e) => {
+            e.dataTransfer.setData("text/plain", task.id);
+        });
+    
+        usedPomodorosSpan.textContent = task.completedPomodoros;   
+    }
+
     toggleTaskContainer() {
         this.containerForTask.style.display = this.containerForTask.style.display === "none" ? "block" : "none";
     }
@@ -81,86 +135,24 @@ export default class UI {
 
     displayTasks() {
         const tasks = this.tasks.getTasks();
-        this.containerTask.innerHTML = ''; 
+        this.containerTask.innerHTML = '';
         tasks.forEach((task, index) => {
-            const taskElement = this.createTaskElement(task, index);
-            this.containerTask.appendChild(taskElement);//вынести tamplates класс
-    });
+            const taskHTML = createTaskElement(task);
+            const taskElement = document.createElement("div");
+            taskElement.classList.add("task-list");
+            taskElement.setAttribute("draggable", "true");
+            taskElement.setAttribute("data-id", task.id);
+            taskElement.innerHTML = taskHTML;
+            
+            this.addEventListenerForTask(taskElement, task);
+            this.containerTask.appendChild(taskElement);
+        });
     }
 
-    createTaskElement(task, index) {
-        const taskList = document.createElement("div");
-        taskList.classList.add("task-list");
-        taskList.setAttribute("draggable", "true");
-        taskList.setAttribute("data-id", task.id);
-
-        taskList.innerHTML = `
-          <div class="do-task">
-          <input type="checkbox" class = "checkbox">
-            <span >${task.textInput}</span>
-          </div>
-          <div class="right-side">
-           
-            <span class="use-pmodoro">${task.completedPomodoros || 0}</span><span class ="count-pomodoro">/${task.pomodoroCount}</span> 
-            <button class="open-task">open</button>
-            <button class="delete-task">&#10006;</button>
-          </div>`;
-        
-         //для отображение чекбокса с выполнеными помидорками
-          const checkbox = taskList.querySelector('.checkbox');
-          const textSpan = taskList.querySelector('.do-task span');
-          // автоматическое отображение чекбокса при выполненно лимите помидорок
-          if (task.completedPomodoros >= task.pomodoroCount) {
-            checkbox.checked = true; 
-            textSpan.style.textDecoration = "line-through"; 
-        }
-
-        //отображение чекбокса
-          checkbox.addEventListener("change", () => {
-              if (checkbox.checked) {
-                  textSpan.style.textDecoration = "line-through";
-              } else {
-                  textSpan.style.textDecoration = "none";
-              }
-              taskList.parentNode.appendChild(taskList);
-        })
-        //отображение контейнера для настройки задачи искрытие контейнара для корректирвки задачи
-        const openBtn = taskList.querySelector(".open-task");
-        openBtn.addEventListener("click", () => {
-            this.containerForTask.remove()
-            this.containerForCorrectTask.style.display = "block";
-            this.correctSpan.textContent = task.textInput; 
-        });
-    
-        this.correctDeleteBtn.addEventListener("click", ()=> {
-          this.deleteTask(taskList, task)
-        })
-    
-        const taskContent = taskList.querySelector('.do-task span'); 
-        taskList.addEventListener('click', () => {
-          const highlighted = document.querySelector('.task-list.highlighted');
-          if (highlighted) {
-              highlighted.classList.remove('highlighted'); 
-          }
-          taskList.classList.add('highlighted'); 
-          this.ttFocus.textContent = taskContent.textContent; 
-          //сохранить выбранную задачу
-          this.activeTaskId = task.id; 
-        })
-        //click DEL btns in task
-        const deleteBtn = taskList.querySelector(".delete-task");
-        deleteBtn.addEventListener("click", ()=>{
-           this.tasks.deleteTask(task.id)
-           this.displayTasks()
-        })
-
-        taskList.addEventListener("dragstart", (e) => {
-            e.dataTransfer.setData("text/plain", task.id);
-        });
-    
-        //dragover и drop 
+    //dragover и drop 
+    settingsDragAndDrop() {
         this.containerTask.addEventListener("dragover", (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
             e.dataTransfer.dropEffect = "move";
         });
     
@@ -168,20 +160,12 @@ export default class UI {
             e.preventDefault();
             const taskId = e.dataTransfer.getData("text/plain");
             const targetTask = this.containerTask.querySelector(`[data-id='${taskId}']`);
-            //найти ближайшую задачу
             const closestTask = e.target.closest(".task-list");
     
             if (closestTask && targetTask !== closestTask) {
-                //перетащить задачу и сбросит место
-                this.containerTask.insertBefore(targetTask, closestTask);
-               
+                this.containerTask.insertBefore(targetTask, closestTask.nextSibling); 
             }
         });
-
-        const usedPomodorosSpan = taskList.querySelector('.use-pmodoro');
-        usedPomodorosSpan.textContent = task.completedPomodoros;
-
-        return taskList;
     }
 
     updateTaskCount(count) {

@@ -1,4 +1,5 @@
 import Tasks from "./Tasks";
+import  CONFIG, { POMODORO, SHORT_BREAK, LONG_BREAK }  from "../tamplates/config";
 
 export default class UI {
    constructor(timer){
@@ -36,21 +37,17 @@ export default class UI {
         this.ttFocus = document.querySelector(".tt-focus")
         //хранить выбранную задачу
         this.activeTaskId = null;
-        this.currentTheme = 'POMODORO';
-        this.CONFIG = {
-            POMODORO: { time: 0.1 * 60 * 1000, themeId: "pomodoro-break-timer" },
-            SHORT_BREAK: { time: 5 * 60 * 1000, themeId: "short-break-timer" },
-            LONG_BREAK: { time: 15 * 60 * 1000, themeId: "long-break-timer" },
-        };
+        //дефолтная тема
+        this.currentTheme = POMODORO;
     }
 
     addEventListener(){
         this.startBtn.addEventListener("click",  () =>{
             this.toggleTimer()
         });
-        this.pomodoroButton.addEventListener("click", () => this.changeTheme('POMODORO'));
-        this.shortBreakButton.addEventListener("click", () => this.changeTheme('SHORT_BREAK'));
-        this.longBreakButton.addEventListener("click", () => this.changeTheme('LONG_BREAK'));
+        this.pomodoroButton.addEventListener("click", () => this.changeTheme(POMODORO));
+        this.shortBreakButton.addEventListener("click", () => this.changeTheme(SHORT_BREAK));
+        this.longBreakButton.addEventListener("click", () => this.changeTheme(LONG_BREAK));
         this.addTaskButton.addEventListener("click", () => this.toggleTaskContainer());
         this.saveBtn.addEventListener("click", (event) => this.saveTask(event));
         this.correctCancelBtn.addEventListener("click", () => this.containerForCorrectTask.style.display = "none");
@@ -82,7 +79,7 @@ export default class UI {
         this.containerTask.innerHTML = ''; 
         tasks.forEach((task, index) => {
             const taskElement = this.createTaskElement(task, index);
-            this.containerTask.appendChild(taskElement);
+            this.containerTask.appendChild(taskElement);//вынести tamplates класс
     });
     }
 
@@ -91,7 +88,6 @@ export default class UI {
         taskList.classList.add("task-list");
         taskList.setAttribute("draggable", "true");
         taskList.setAttribute("data-id", task.id);
-        //для отображение чекбокса с выполнеными помидорками
 
         taskList.innerHTML = `
           <div class="do-task">
@@ -105,7 +101,7 @@ export default class UI {
             <button class="delete-task">&#10006;</button>
           </div>`;
         
-        
+         //для отображение чекбокса с выполнеными помидорками
           const checkbox = taskList.querySelector('.checkbox');
           const textSpan = taskList.querySelector('.do-task span');
           // автоматическое отображение чекбокса при выполненно лимите помидорок
@@ -193,7 +189,7 @@ export default class UI {
 
 
         if (!this.timer.isRunning()) {
-            const timeInMilliseconds = this.CONFIG[this.currentTheme].time;
+            const timeInMilliseconds = CONFIG[this.currentTheme].time;
             this.timer.start(timeInMilliseconds);
             this.startBtn.textContent = "PAUSE";
         } else {
@@ -206,31 +202,31 @@ export default class UI {
     }
 
     changeTheme(theme) {
-        const themeConfig = this.CONFIG[theme];
+        const themeConfig = CONFIG[theme];
         this.currentTheme = theme;
-        this.body.classList.remove("pomodoro-timer", "short-break-timer", "long-break-timer");
+        this.body.classList.remove(CONFIG[POMODORO].themeId, CONFIG[SHORT_BREAK].themeId, CONFIG[LONG_BREAK].themeId);
         this.body.classList.add(themeConfig.themeId);
-        const minutes = Math.floor(themeConfig.time/60000)
-        const seconds = Math.floor((themeConfig.time % 60000)/1000)
-        this.updateTimeDisplay( minutes,  seconds );
+        const minutes = Math.floor(themeConfig.time/60000)// вынести в отдельный метод
+        const seconds = Math.floor((themeConfig.time % 60000)/1000)// вынести в отдельный метод
         this.timer.stop();
+        this.updateTimeDisplay( minutes,  seconds );
         this.saveThemeAndTimeToLocalStorage();
     }
 
     getThemeAndTimeFromLocalStorage(){
         const savedThemeAndTime = JSON.parse(localStorage.getItem('themeAndTime'));
-        if (savedThemeAndTime && this.CONFIG.hasOwnProperty(savedThemeAndTime.theme)) {
+        if (savedThemeAndTime && CONFIG.hasOwnProperty(savedThemeAndTime.theme)) {
             this.changeTheme(savedThemeAndTime.theme);
             } else {
             //тема по умолчанию
-            this.changeTheme('POMODORO');
+            this.changeTheme(POMODORO);
             }
     }
 
     saveThemeAndTimeToLocalStorage(){
         localStorage.setItem('themeAndTime', JSON.stringify({
             theme: this.currentTheme,
-            time: this.CONFIG[this.currentTheme].time
+            time: CONFIG[this.currentTheme].time
           }));
     }
 
@@ -249,7 +245,7 @@ export default class UI {
         //если время закончилось само обновляется таймер, кнопка и прогресс бар до начального состояния
         if (data.type === 'POMODORO_COMPLETE') {
             this.startBtn.textContent = "START";
-            const themeConfig = this.CONFIG[this.currentTheme];
+            const themeConfig = CONFIG[POMODORO];
             const minutes = Math.floor(themeConfig.time / 60000);
             const seconds = Math.floor((themeConfig.time % 60000) / 1000);
             this.updateTimeDisplay(minutes, seconds);

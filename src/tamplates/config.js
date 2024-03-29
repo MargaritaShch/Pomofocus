@@ -1,6 +1,6 @@
-const POMODORO = 'POMODORO';
-const SHORT_BREAK = 'SHORT_BREAK';
-const LONG_BREAK = 'LONG_BREAK';
+const POMODORO = "POMODORO";
+const SHORT_BREAK = "SHORT_BREAK";
+const LONG_BREAK = "LONG_BREAK";
 
 const CONFIG = {
   [POMODORO]: { time: 0.1 * 60 * 1000, themeId: "pomodoro-break-timer" },

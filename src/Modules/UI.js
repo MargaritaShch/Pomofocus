@@ -35,6 +35,9 @@ export default class UI {
         this.correctDeleteBtn = document.querySelector(".correct-delete-btn");
         this.inputWriteTask = document.querySelector(".input-task");
         this.ttFocus = document.querySelector(".tt-focus")
+        this.plusBtn = document.querySelector(".plus-btn");
+        this.minusBtn = document.querySelector(".minus-btn");
+        this.countInput = document.querySelector(".count-pomodoros");
         //хранить выбранную задачу
         this.activeTaskId = null;
         //дефолтная тема
@@ -53,6 +56,8 @@ export default class UI {
         this.correctCancelBtn.addEventListener("click", () => this.containerForCorrectTask.style.display = "none");
         this.cancelBtn.addEventListener("click", () => this.containerForTask.style.display = "none");
         this.correctSaveBtn.addEventListener("click", (event)=> this.saveTask(event));
+        this.plusBtn.addEventListener("click", () => this.incrementCount());
+        this.minusBtn.addEventListener("click", () => this.decrementCount());
     }
 
     toggleTaskContainer() {
@@ -179,6 +184,31 @@ export default class UI {
         return taskList;
     }
 
+    updateTaskCount(count) {
+        const pomodoroSpan = this.taskList.querySelector(".count-pomodoro");
+        pomodoroSpan.textContent = `/${count}`;
+      }
+    
+      incrementCount() {
+        this.countInput.value++;
+        this.counterPomodoro();
+      }
+    
+      decrementCount() {
+        this.countInput.value--;
+        if (this.countInput.value <= 1) {
+          this.countInput.value = 1;
+        }
+        this.counterPomodoro();
+      }
+    
+      counterPomodoro() {
+        let countPomodoro = document.querySelector(".count-pomodoro");
+        if (countPomodoro) {
+          countPomodoro.innerHTML = `/${this.countInput.value}`;
+        }
+      }
+      
     toggleTimer(){
         //проверка на д=лимит
         const activeTask = this.tasks.savedTasks.find(task => task.id === this.activeTaskId);

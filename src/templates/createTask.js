@@ -2,7 +2,7 @@ export function createTaskElement(task){
   const isChecked = task.isCompleted ? 'checked' : '';
     return `
       <label class="do-task">
-        <input type="checkbox" class="checkbox" ${isChecked}>
+      <input type="checkbox" class="checkbox" ${isChecked}>
         <span>${task.textInput}</span>
       </label>
       <div class="right-side">

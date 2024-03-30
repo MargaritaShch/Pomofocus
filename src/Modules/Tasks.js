@@ -51,6 +51,23 @@ class Tasks {
         }
     }
   }
-}
 
+  updateTaskCompletion(taskId) {
+    const task = this.savedTasks.find(task => task.id === taskId);
+    if (task) {
+        task.isCompleted = !task.isCompleted; 
+        this.saveTasks();
+    }
+  }
+
+  updateTask(taskId, newText, newPomodoroCount) {
+    const task = this.savedTasks.find(task => task.id === taskId);
+    if (task) {
+        task.textInput = newText;
+        task.pomodoroCount = newPomodoroCount;
+        this.saveTasks();
+    }
+  }
+
+}
 export default Tasks;

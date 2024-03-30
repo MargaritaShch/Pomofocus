@@ -343,13 +343,14 @@
   background: white;
   border-radius: 5px;
   margin-bottom: 10px;
+  transition: background-color 0.3s, border-color 0.3s;
 
   &.highlighted {
-    background-color: #e8e4e4c8;
     transform: scale(1.03);
     transition:
       background-color 0.3s,
       transform 0.3s;
+      border: 3px solid rgb(149, 201, 111);
   }
 
   .do-task{
@@ -367,8 +368,6 @@
     border: 0.5px solid grey;
     width: 20px;
     height: 20px;
-    display: none;
-    // display: flex;
     justify-content: left;
   }
   .checkbox + span {
@@ -377,7 +376,6 @@
     position: relative;
     
     &:before {
-      content: '';
       position: absolute;
       left: 0;
       top: 50%;
@@ -392,6 +390,7 @@
   
   .checkbox:checked + span {
     text-decoration: line-through;
+    
   }
   }
 

@@ -48,24 +48,7 @@ export default class UI {
         this.shortBreakButton.addEventListener("click", () => this.changeTheme(SHORT_BREAK));
         this.longBreakButton.addEventListener("click", () => this.changeTheme(LONG_BREAK));
         this.addTaskButton.addEventListener("click", () =>  this.toggleTaskContainer(false));
-        this.saveBtn.addEventListener("click", (event) => {
-            console.log(`Current inputWriteTask.value before saveTask: "${this.inputWriteTask.value}"`);
-            event.preventDefault();
-            const textInput = this.inputWriteTask.value;
-            const pomodoroCount = Number(this.countInput.value) || 1;
-
-            if (this.activeTaskId) {
-                this.tasks.updateTask(this.activeTaskId, textInput, pomodoroCount);
-            } else {
-                this.tasks.addTask(textInput, pomodoroCount);
-            }
-
-            this.displayTasks();
-            this.toggleTaskContainer(false); 
-            
-            this.saveTask(event)
-        });
-
+        this.saveBtn.addEventListener("click", (event) => this.saveTask(event));
         this.deleteBtn.addEventListener("click", () => {
             if (this.activeTaskId) {
                 this.tasks.deleteTask(this.activeTaskId);
@@ -107,7 +90,6 @@ export default class UI {
             }
         })
 
-        
         //отображение контейнера для настройки задачи и скрытие контейнара для корректирвки задачи
         openBtn.addEventListener("click", () => {
             const currentValue = task.textInput;
@@ -160,6 +142,7 @@ export default class UI {
     }
     
     saveTask(event) {
+        console.log("Saving task...");
         event.preventDefault();
         const textInput = this.inputWriteTask.value.trim();
         const pomodoroCount = Number(this.countInput.value) || 1;
@@ -169,10 +152,14 @@ export default class UI {
         }
         if (this.activeTaskId) {
             this.tasks.updateTask(this.activeTaskId, textInput, pomodoroCount);
-            this.activeTaskId = null;
+            // this.activeTaskId = null;
         } else {
             this.tasks.addTask(textInput, pomodoroCount);
         }
+        //очитска формы
+        this.activeTaskId = null
+        this.inputWriteTask.value = "";
+        this.countInput.value = "1";
         this.displayTasks();
         this.containerForTask.style.display = "none"
     }

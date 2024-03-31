@@ -47,17 +47,19 @@ export default class UI {
         this.pomodoroButton.addEventListener("click", () => this.changeTheme(POMODORO));
         this.shortBreakButton.addEventListener("click", () => this.changeTheme(SHORT_BREAK));
         this.longBreakButton.addEventListener("click", () => this.changeTheme(LONG_BREAK));
-        this.addTaskButton.addEventListener("click", () =>  this.toggleTaskContainer(false));
+        this.addTaskButton.addEventListener("click", () =>  this.toggleTaskContainer());
         this.saveBtn.addEventListener("click", (event) => this.saveTask(event));
-        this.deleteBtn.addEventListener("click", () => {
+        this.deleteBtn.addEventListener("click", (event) => {
+            event.stopPropagation()
             if (this.activeTaskId) {
                 this.tasks.deleteTask(this.activeTaskId);
                 this.displayTasks();
                 this.activeTaskId = null; 
             }
             this.deleteBtn.style.display = "none";
+            this.toggleTaskContainer(false); 
         })
-
+        
         this.cancelBtn.addEventListener("click", () => this.containerForTask.style.display = "none");
         this.plusBtn.addEventListener("click", () => this.incrementCount());
         this.minusBtn.addEventListener("click", () => this.decrementCount());
@@ -66,7 +68,7 @@ export default class UI {
     addEventListenerForTask(taskElement, task) {
         const checkbox = taskElement.querySelector('.checkbox');
         const openBtn = taskElement.querySelector('.open-task');
-        const deleteBtn = taskElement.querySelector('.delete-task');
+        const deleteTaskBtn = taskElement.querySelector('.delete-task');
         const textSpan = taskElement.querySelector('.do-task span');
         const usedPomodorosSpan = taskElement.querySelector('.use-pmodoro');
           // автоматическое отображение чекбокса при выполненно лимите помидорок
@@ -93,7 +95,6 @@ export default class UI {
         //отображение контейнера для настройки задачи и скрытие контейнара для корректирвки задачи
         openBtn.addEventListener("click", () => {
             const currentValue = task.textInput;
-            console.log(`Setting inputWriteTask.value to: "${task.textInput}"`);
             this.inputWriteTask.value = currentValue;
             this.currentEditingValue = currentValue;
             this.countInput.value = task.pomodoroCount;
@@ -102,9 +103,10 @@ export default class UI {
             if (this.deleteBtn) this.deleteBtn.style.display = 'inline-block';
         });
     
-        deleteBtn.addEventListener("click", ()=>{
-            if (this.activeTaskId) {
-                this.tasks.deleteTask(this.activeTaskId);
+        deleteTaskBtn.addEventListener("click", (event)=>{
+            event.stopPropagation();
+            if (confirm("Вы уверены, что хотите удалить эту задачу?")) {
+                this.tasks.deleteTask(task.id);
                 this.displayTasks();
                 this.toggleTaskContainer(false); 
               }
@@ -126,19 +128,30 @@ export default class UI {
         taskElement.addEventListener("dragstart", (e) => {
             e.dataTransfer.setData("text/plain", task.id);
         });
-    
+        
+
         usedPomodorosSpan.textContent = task.completedPomodoros;   
     }
 
     toggleTaskContainer(editMode, task = {}) {
+        if (editMode === false) {
+            this.containerForTask.style.display = "none";
+            return; 
+        }
+        this.containerForTask.style.display = editMode && this.activeTaskId ? "block" : "none";
         this.containerForTask.style.display = "block";
-    // если редактируеся существующая задача
+        // если редактируеся существующая задача
         if (editMode) {
             this.inputWriteTask.value = task.textInput || "";
             this.countInput.value = task.pomodoroCount || 1;
             this.activeTaskId = task.id;
             this.deleteBtn.style.display = "inline-block";
-        } 
+        }  else {
+            this.inputWriteTask.value = "";
+            this.countInput.value = 1;
+            this.activeTaskId = null;
+            this.deleteBtn.style.display = "none"; 
+        }
     }
     
     saveTask(event) {
@@ -147,7 +160,7 @@ export default class UI {
         const textInput = this.inputWriteTask.value.trim();
         const pomodoroCount = Number(this.countInput.value) || 1;
         if (!textInput) {
-            alert("Please, add your text");
+            alert("Введите название задачи");
             return;
         }
         if (this.activeTaskId) {

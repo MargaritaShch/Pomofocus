@@ -190,6 +190,12 @@ export default class UI {
             this.addEventListenerForTask(taskElement, task);
             this.containerTask.appendChild(taskElement);
         });
+        //отображение первой задачи 
+        if (tasks.length > 0) {
+            this.ttFocus.textContent = tasks[0].textInput;
+        } else {
+            this.ttFocus.textContent = "Time to focus!"; 
+        }
     }
 
     //dragover и drop 
@@ -243,7 +249,6 @@ export default class UI {
             alert("Достигнут лимит помидорок для этой задачи");
             return; 
         }
-
 
         if (!this.timer.isRunning()) {
             const timeInMilliseconds = CONFIG[this.currentTheme].time;

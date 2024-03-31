@@ -96,6 +96,15 @@ export default class UI {
           checkbox.addEventListener("change", () => {
             this.tasks.updateTaskCompletion(task.id);
             taskElement.parentNode.appendChild(taskElement);
+            //если чекбокс отжат менять стиль
+            if (checkbox.checked) {
+                taskElement.classList.remove('highlighted'); 
+                taskElement.style.borderColor = "palegreen"; 
+                taskElement.style.backgroundColor = "lightgrey"; 
+            } else {
+                taskElement.style.borderColor = ""; 
+                taskElement.style.backgroundColor = ""; 
+            }
         })
 
         

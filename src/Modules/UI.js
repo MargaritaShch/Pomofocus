@@ -11,7 +11,6 @@ export default class UI {
         this.tasks.loadTasks();
         this.getThemeAndTimeFromLocalStorage()
         this.displayTasks()
-        timer.subscribe(this)
         this.settingsDragAndDrop()
     }
 
@@ -113,6 +112,8 @@ export default class UI {
         usedPomodorosSpan.textContent = task.completedPomodoros;
     
         taskElement.addEventListener('click', () => {
+            //активная задача
+            this.activeTaskId = task.id; 
           const highlighted = document.querySelector('.task-list.highlighted');
           if (highlighted) {
               highlighted.classList.remove('highlighted'); 
@@ -322,14 +323,9 @@ export default class UI {
             this.secondElem.textContent = seconds.toString().padStart(2, "0");
     }
     
-    getUsedPomodoro() {
-        if (this.activeTaskId) {
-            this.tasks.handlePomodoroComplete(this.activeTaskId);
-            this.displayTasks(); 
-        }
-    }
     update(data){
         //если время закончилось само обновляется таймер, кнопка и прогресс бар до начального состояния
+        //'POMODORO_COMPLETE' метка для уведомления, что нужно выполнять все действия и if
         if (data.type === 'POMODORO_COMPLETE') {
             this.startBtn.textContent = "START";
             const themeConfig = CONFIG[POMODORO];
@@ -337,7 +333,13 @@ export default class UI {
             this.updateTimeDisplay(minutes, seconds);
             //сбросить прогрессбар
             this.updateProgressBar(0); 
-            this.getUsedPomodoro(); 
+
+            if (this.activeTaskId !== null) {
+                //oбновление использованных помидорок
+                this.tasks.handlePomodoroComplete(this.activeTaskId); 
+                this.displayTasks(); 
+            }
+            //метка для отображения времени
         } else if (data.type === 'TICK') {
             this.updateTimeDisplay(data.minutes, data.seconds);
             this.updateProgressBar(data.percentComplete);

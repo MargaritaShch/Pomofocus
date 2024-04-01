@@ -45,13 +45,15 @@ class Tasks {
   handlePomodoroComplete(activeTaskId) {
     const task = this.savedTasks.find(task => task.id === activeTaskId);
     if (task) {
-        task.completedPomodoros = (task.completedPomodoros || 0) + 1;
-        this.saveTasks();
-        //если кол-во заданных и потраченных помидорок равны 
-        if(task.completedPomodoros === task.pomodoroCount){
-          //то задача выполнена
-          task.isComplite = true
+        //проверка на не превышение законченых задач
+        if (task.completedPomodoros < task.pomodoroCount) {
+            task.completedPomodoros++;
+            //если кол-во выполненных и заданных равно - выполнено
+            if (task.completedPomodoros === task.pomodoroCount) {
+                task.isComplete = true;
+            }
         }
+        this.saveTasks();
     }
   }
 

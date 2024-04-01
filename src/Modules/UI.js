@@ -71,12 +71,11 @@ export default class UI {
         const deleteTaskBtn = taskElement.querySelector('.delete-task');
         const textSpan = taskElement.querySelector('.do-task span');
         const usedPomodorosSpan = taskElement.querySelector('.use-pmodoro');
-          // автоматическое отображение чекбокса при выполненно лимите помидорок
-          if (task.completedPomodoros >= task.pomodoroCount) {
+        // автоматическое отображение чекбокса при выполненно лимите помидорок
+        if (task.completedPomodoros >= task.pomodoroCount) {
             checkbox.checked = true; 
             textSpan.style.textDecoration = "line-through"; 
         }
-
         //отображение чекбокса
           checkbox.addEventListener("change", () => {
             this.tasks.updateTaskCompletion(task.id);
@@ -91,7 +90,6 @@ export default class UI {
                 taskElement.style.backgroundColor = ""; 
             }
         })
-
         //отображение контейнера для настройки задачи и скрытие контейнара для корректирвки задачи
         openBtn.addEventListener("click", () => {
             const currentValue = task.textInput;
@@ -124,11 +122,9 @@ export default class UI {
           //сохранить выбранную задачу
           this.activeTaskId = task.id; 
         })
-        
         taskElement.addEventListener("dragstart", (e) => {
             e.dataTransfer.setData("text/plain", task.id);
         });
-        
 
         usedPomodorosSpan.textContent = task.completedPomodoros;   
     }
@@ -155,7 +151,6 @@ export default class UI {
     }
     
     saveTask(event) {
-        console.log("Saving task...");
         event.preventDefault();
         const textInput = this.inputWriteTask.value.trim();
         const pomodoroCount = Number(this.countInput.value) || 1;
@@ -165,7 +160,6 @@ export default class UI {
         }
         if (this.activeTaskId) {
             this.tasks.updateTask(this.activeTaskId, textInput, pomodoroCount);
-            // this.activeTaskId = null;
         } else {
             this.tasks.addTask(textInput, pomodoroCount);
         }
@@ -177,7 +171,16 @@ export default class UI {
         this.containerForTask.style.display = "none"
     }
 
+    updateTotalDisplay(totalPomodoros){
+        const totalHours = Math.floor(totalPomodoros*25/60)
+        const totalMinutes = (totalPomodoros*25)%60
+        document.querySelector(".all").textContent = `/${totalPomodoros}`;
+        document.querySelector(".all-time-hours").textContent = `${String(totalHours).padStart(2, '0')}:`;
+        document.querySelector(".all-time-minutes").textContent = String(totalMinutes).padStart(2, '0');
+    }
+
     displayTasks() {
+        let totalPomodoros = 0;
         const tasks = this.tasks.getTasks();
         this.containerTask.innerHTML = '';
         tasks.forEach((task, index) => {
@@ -189,12 +192,16 @@ export default class UI {
             taskElement.innerHTML = taskHTML;
             this.addEventListenerForTask(taskElement, task);
             this.containerTask.appendChild(taskElement);
+            totalPomodoros += task.pomodoroCount;
         });
         //отображение первой задачи 
         if (tasks.length > 0) {
             this.ttFocus.textContent = tasks[0].textInput;
+            this.updateTotalDisplay(totalPomodoros)
+            document.querySelector(".total-quanty").style.display = "";
         } else {
-            this.ttFocus.textContent = "Time to focus!"; // Текст по умолчанию, если задач нет
+            this.ttFocus.textContent = "Time to focus!"; 
+            document.querySelector(".total-quanty").style.display = "none";
         }
     }
 
@@ -254,12 +261,12 @@ export default class UI {
         }
     }
     
-      counterPomodoro() {
+    counterPomodoro() {
         let countPomodoro = document.querySelector(".count-pomodoro");
         if (countPomodoro) {
-          countPomodoro.innerHTML = `/${this.countInput.value}`;
+            countPomodoro.innerHTML = `/${this.countInput.value}`;
         }
-      }
+    }
       
     toggleTimer(){
         //проверка на д=лимит

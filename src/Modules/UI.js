@@ -194,7 +194,7 @@ export default class UI {
         if (tasks.length > 0) {
             this.ttFocus.textContent = tasks[0].textInput;
         } else {
-            this.ttFocus.textContent = "Time to focus!"; 
+            this.ttFocus.textContent = "Time to focus!"; // Текст по умолчанию, если задач нет
         }
     }
 
@@ -223,17 +223,36 @@ export default class UI {
       }
     
       incrementCount() {
-        this.countInput.value++;
-        this.counterPomodoro();
-      }
-    
-      decrementCount() {
-        this.countInput.value--;
-        if (this.countInput.value <= 1) {
-          this.countInput.value = 1;
+        if (this.activeTaskId) {
+            //определенная задача
+            const task = this.tasks.getTaskById(this.activeTaskId);
+            if (task) {
+                task.pomodoroCount++;
+                this.tasks.saveTasks(); 
+                this.countInput.value = task.pomodoroCount; 
+                this.displayTasks(); 
+            }
+        } else {
+            this.countInput.value++;
         }
-        this.counterPomodoro();
-      }
+    }
+    
+    decrementCount() {
+        if (this.activeTaskId) {
+            const task = this.tasks.getTaskById(this.activeTaskId);
+            if (task && task.pomodoroCount > 1) {
+                task.pomodoroCount--;
+                this.tasks.saveTasks(); 
+                this.countInput.value = task.pomodoroCount; 
+                this.displayTasks(); 
+            }
+        } else {
+            this.countInput.value--;
+            if (this.countInput.value <= 1) {
+                this.countInput.value = 1;
+            }
+        }
+    }
     
       counterPomodoro() {
         let countPomodoro = document.querySelector(".count-pomodoro");
@@ -268,8 +287,7 @@ export default class UI {
         this.currentTheme = theme;
         this.body.classList.remove(CONFIG[POMODORO].themeId, CONFIG[SHORT_BREAK].themeId, CONFIG[LONG_BREAK].themeId);
         this.body.classList.add(themeConfig.themeId);
-        const minutes = Math.floor(themeConfig.time/60000)// вынести в отдельный метод
-        const seconds = Math.floor((themeConfig.time % 60000)/1000)// вынести в отдельный метод
+        const { minutes, seconds } = this.timer.convertTime(themeConfig.time);
         this.timer.stop();
         this.updateTimeDisplay( minutes,  seconds );
         this.saveThemeAndTimeToLocalStorage();
@@ -308,8 +326,7 @@ export default class UI {
         if (data.type === 'POMODORO_COMPLETE') {
             this.startBtn.textContent = "START";
             const themeConfig = CONFIG[POMODORO];
-            const minutes = Math.floor(themeConfig.time / 60000);
-            const seconds = Math.floor((themeConfig.time % 60000) / 1000);
+            const { minutes, seconds } = this.timer.convertTime(themeConfig.time);
             this.updateTimeDisplay(minutes, seconds);
             //сбросить прогрессбар
             this.updateProgressBar(0); 

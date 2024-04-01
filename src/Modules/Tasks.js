@@ -21,7 +21,10 @@ class Tasks {
   getTasks() {
     return this.savedTasks;
   }
-
+  //возврат зопределенной задачи из массива
+  getTaskById(taskId) {
+    return this.savedTasks.find(task => task.id === taskId);
+  }
   addTask(textInput, pomodoroCount) {
     const task = {
       id: Date.now(),

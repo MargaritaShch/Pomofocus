@@ -37,8 +37,9 @@ class Timer {
     if (this.timerInterval !== null) return;
     this.totalTime = milliseconds;
     this.elapsedTime = 0;
-    this.minutes = Math.floor(milliseconds / 60000);
-    this.seconds = (milliseconds % 60000) / 1000;
+    const { minutes, seconds } = this.convertTime(milliseconds);
+    this.minutes = minutes;
+    this.seconds = seconds;
     this.timerInterval = setInterval(() => {
       this.tick();
     }, 1000);
@@ -69,6 +70,12 @@ class Timer {
   const percentComplete = (this.elapsedTime / this.totalTime) * 100;
   this.notifyObserver({ minutes: this.minutes, seconds: this.seconds, percentComplete, type: "TICK" });
  }
+
+ convertTime(milliseconds) {
+  const minutes = Math.floor(milliseconds / 60000);
+  const seconds = Math.floor((milliseconds % 60000) / 1000);
+  return { minutes, seconds };
+}
 }
 
 

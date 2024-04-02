@@ -8,7 +8,7 @@ class Tasks {
     this.savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
   }
 
-  saveTasks() {
+  updateTasksInStorage() {
     localStorage.setItem("tasks", JSON.stringify(this.savedTasks));
   }
 
@@ -28,12 +28,12 @@ class Tasks {
       pomodoroCount,
     };
     this.savedTasks.push(task);
-    this.saveTasks();
+    this.updateTasksInStorage();
   }
 
   deleteTask(taskId) {
     this.savedTasks = this.savedTasks.filter(task => task.id !== taskId);
-    this.saveTasks();
+    this.updateTasksInStorage();
   }
 
   //управление использованными помидорками
@@ -48,7 +48,7 @@ class Tasks {
                 task.isComplete = true;
             }
         }
-        this.saveTasks();
+        this.updateTasksInStorage();
     }
   }
 
@@ -56,7 +56,7 @@ class Tasks {
     const task = this.savedTasks.find(task => task.id === taskId);
     if (task) {
         task.isCompleted = !task.isCompleted; 
-        this.saveTasks();
+        this.updateTasksInStorage();
     }
   }
 
@@ -65,9 +65,19 @@ class Tasks {
     if (task) {
         task.textInput = newText;
         task.pomodoroCount = newPomodoroCount;
-        this.saveTasks();
+        this.updateTasksInStorage();
     }
   }
 
+  deleteAllTasks() {
+    this.savedTasks = [];
+    this.updateTasksInStorage();
+  }
+  
+  deleteCompletedTasks() {
+    this.savedTasks = this.savedTasks.filter(task => !task.isComplete);
+    this.updateTasksInStorage();
+  
+}
 }
 export default Tasks;

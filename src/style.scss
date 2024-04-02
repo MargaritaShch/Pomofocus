@@ -65,7 +65,7 @@
 
 .time {
   text-align: center;
-  font-size: 150px;
+  font-size: 130px;
 }
 
 .start-btn {
@@ -95,7 +95,44 @@
   justify-content: center;
   padding-top: 20px;
 }
+.dots{
+  width: 30px;
+  height: 30px;
+  background-color: rgba(240, 248, 255, 0.472);
+  cursor: pointer;
+  border-radius: 5px;
+}
 
+.modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  position: absolute; 
+  padding: 20px;
+  background-color: #fff;
+  width: 190px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 10; 
+
+  button {
+    text-align: left;
+    font-size: 12px;
+    background-color: #fff;
+    padding: 10px ;
+    margin-bottom: 10px; 
+    cursor: pointer;
+    border: none;
+    outline: none;
+    &:hover {
+      background-color: #bdb8b8;
+    }
+    &:active {
+      background-color: #dcdcdc;
+    }
+  }
+}
 .tt-focus {
   padding-top: 22px;
 }
@@ -424,6 +461,14 @@
       border-radius: 3px;
       border: none;
       background-color: rgba(128, 128, 128, 0.387);
+
+      &:hover {
+        background-color: #636262; 
+      }
+    
+      &:active {
+        background-color: #f57272; 
+      }
     }
 
     .open-task {
@@ -434,6 +479,15 @@
       border-radius: 3px;
       border: none;
       background-color: rgba(128, 128, 128, 0.387);
+
+      &:hover {
+        background-color: #636262; 
+      }
+    
+      &:active {
+        background-color: #87a2f2; 
+      }
+      
     }
   }
 

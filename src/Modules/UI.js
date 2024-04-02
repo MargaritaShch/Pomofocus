@@ -33,6 +33,10 @@ export default class UI {
         this.plusBtn = document.querySelector(".plus-btn");
         this.minusBtn = document.querySelector(".minus-btn");
         this.deleteBtn = document.querySelector(".delete-btn");
+        this.dots = document.querySelector('.dots');
+        this.modal = document.querySelector('.modal');
+        this.deleteAllBtn = this.modal.querySelector('.delete-all');
+        this.deleteCompletedBtn = this.modal.querySelector('.delete-completed');
         //хранить выбранную задачу
         this.activeTaskId = null;
         //дефолтная тема
@@ -40,6 +44,7 @@ export default class UI {
     }
 
     addEventListener(){
+        
         this.startBtn.addEventListener("click",  () =>{
             this.toggleTimer()
         });
@@ -62,6 +67,50 @@ export default class UI {
         this.cancelBtn.addEventListener("click", () => this.containerForTask.style.display = "none");
         this.plusBtn.addEventListener("click", () => this.incrementCount());
         this.minusBtn.addEventListener("click", () => this.decrementCount());
+        this.inputWriteTask.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault(); 
+                this.countInput.focus();
+            }
+        });
+    
+        this.countInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault(); 
+                this.saveTask(event); 
+            }
+        });
+        this.dots.addEventListener("click", (event) => {
+            //позиция кнопки
+            const dotsPosition = this.dots.getBoundingClientRect(); 
+            this.modal.style.display = 'block';
+            this.modal.style.top = `${dotsPosition.bottom + window.scrollY}px`;
+            this.modal.style.left = `${dotsPosition.left + window.scrollX}px`;
+            this.modal.style.position = 'absolute';
+
+            event.stopPropagation();
+          });
+          //на весь документ
+          document.addEventListener("click", (event) => {
+            // проверка на клик вне модалки, чтобы скрывать modal
+            if (!this.modal.contains(event.target) && !this.dots.contains(event.target)) {
+                this.modal.style.display = 'none';
+            }
+        });
+          this.modal.addEventListener("click", (event) => {
+            event.stopPropagation();
+        });
+          this.deleteAllBtn.addEventListener("click", () => {
+            this.tasks.deleteAllTasks();
+            this.displayTasks();
+            this.modal.style.display = 'none';
+          });
+          
+          this.deleteCompletedBtn.addEventListener("click", () => {
+            this.tasks.deleteCompletedTasks();
+            this.displayTasks();
+            this.modal.style.display = 'none';
+          });
     }
 
     addEventListenerForTask(taskElement, task) {
@@ -152,7 +201,7 @@ export default class UI {
     }
     
     saveTask(event) {
-        event.preventDefault();
+        if (event) event.preventDefault(); 
         const textInput = this.inputWriteTask.value.trim();
         const pomodoroCount = Number(this.countInput.value) || 1;
         if (!textInput) {
@@ -187,12 +236,12 @@ export default class UI {
     }
 
     displayTasks() {
+        this.containerTask.innerHTML = '';
         //для всех помидорок
         let totalPomodoros = 0;
         //для потраченных помидрок
         let totalCompletedPomodoros = 0;
         const tasks = this.tasks.getTasks();
-        this.containerTask.innerHTML = '';
         tasks.forEach((task, index) => {
             const taskHTML = createTaskElement(task);
             const taskElement = document.createElement("div");
@@ -246,7 +295,7 @@ export default class UI {
             const task = this.tasks.getTaskById(this.activeTaskId);
             if (task) {
                 task.pomodoroCount++;
-                this.tasks.saveTasks(); 
+                this.tasks.updateTasksInStorage(); 
                 this.countInput.value = task.pomodoroCount; 
                 this.displayTasks(); 
             }
@@ -260,7 +309,7 @@ export default class UI {
             const task = this.tasks.getTaskById(this.activeTaskId);
             if (task && task.pomodoroCount > 1) {
                 task.pomodoroCount--;
-                this.tasks.saveTasks(); 
+                this.tasks.updateTasksInStorage(); 
                 this.countInput.value = task.pomodoroCount; 
                 this.displayTasks(); 
             }
@@ -303,7 +352,6 @@ export default class UI {
     changeTheme(theme) {
         const themeConfig = CONFIG[theme];
         this.currentTheme = theme;
-        this.body.classList.remove(CONFIG[POMODORO].themeId, CONFIG[SHORT_BREAK].themeId, CONFIG[LONG_BREAK].themeId);
         this.body.classList.add(themeConfig.themeId);
         const { minutes, seconds } = this.timer.convertTime(themeConfig.time);
         this.timer.stop();

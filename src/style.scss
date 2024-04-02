@@ -99,7 +99,11 @@
 .tt-focus {
   padding-top: 22px;
 }
-
+.choose{
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+}
 .number-task,
 .tt-focus {
   text-align: center;
@@ -433,85 +437,6 @@
     }
   }
 
-
-.container-for-correct-task {
-  margin: auto;
-  width: 520px;
-  height: 220px;
-  background-color: white;
-  border-radius: 10px;
-  margin-bottom: 20px;
-
-  span {
-    color: black;
-    margin-left: 32px;
-    margin-top: 20px;
-    font-weight: bold;
-  }
-  .correct-span-task {
-    cursor: pointer;
-    margin-left: 30px;
-    padding-top: 20px;
-    border: none;
-    font-size: 30px;
-    font-style: italic;
-    font-weight: bold;
-    color: black;
-    outline: none;
-  }
-
-  .correct-count-pomodoros,
-  .correct-count-pomodoros1 {
-    border-radius: 5px;
-    padding: 7px;
-    border: 0.5px solid rgba(128, 128, 128, 0.785);
-    margin-left: 30px;
-    width: 50px;
-    height: 28px;
-    background-color: rgba(128, 128, 128, 0.382);
-  }
-
-  .correct-plus-btn,
-  .correct-minus-btn {
-    cursor: pointer;
-    border-radius: 5px;
-    border: none;
-    box-shadow: 2px 2px 2px 2px grey;
-    width: 50px;
-    height: 40px;
-    padding-right: 30px;
-  }
-
-  .correct-btns {
-    margin-top: 12px;
-    display: flex;
-    justify-content: right;
-    padding-top: 50px;
-    background-color: rgba(128, 128, 128, 0.326);
-    padding-bottom: 20px;
-
-    button {
-      cursor: pointer;
-      background-color: white;
-      width: 70px;
-      height: 34px;
-      border-radius: 5px;
-      font-size: 15px;
-    }
-
-    .correct-delete-btn {
-      border: none;
-      background: none;
-      margin-right: 20px;
-    }
-
-    .correct-cancel-btn {
-      border: none;
-      background: none;
-      margin-right: 20px;
-    }
-  }
-}
 .total-quanty{
   margin: auto;
   display: flex;

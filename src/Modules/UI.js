@@ -172,16 +172,25 @@ export default class UI {
         this.containerForTask.style.display = "none"
     }
 
-    updateTotalDisplay(totalPomodoros){
-        const totalHours = Math.floor(totalPomodoros*25/60)
-        const totalMinutes = (totalPomodoros*25)%60
+    updateTotalDisplay(totalPomodoros,totalCompletedPomodoros){
+        const totalTime = totalPomodoros * 25; 
+        const spentTime = totalCompletedPomodoros * 25;
+        //оставшееся время
+        const remainingTime = totalTime - spentTime; 
+        const totalHours =  Math.floor(remainingTime / 60);
+        const totalMinutes = remainingTime % 60;
+
+        document.querySelector(".all-spent").textContent = totalCompletedPomodoros;
         document.querySelector(".all").textContent = `/${totalPomodoros}`;
         document.querySelector(".all-time-hours").textContent = `${String(totalHours).padStart(2, '0')}:`;
         document.querySelector(".all-time-minutes").textContent = String(totalMinutes).padStart(2, '0');
     }
 
     displayTasks() {
+        //для всех помидорок
         let totalPomodoros = 0;
+        //для потраченных помидрок
+        let totalCompletedPomodoros = 0;
         const tasks = this.tasks.getTasks();
         this.containerTask.innerHTML = '';
         tasks.forEach((task, index) => {
@@ -194,11 +203,12 @@ export default class UI {
             this.addEventListenerForTask(taskElement, task);
             this.containerTask.appendChild(taskElement);
             totalPomodoros += task.pomodoroCount;
+            totalCompletedPomodoros += task.completedPomodoros;
         });
         //отображение первой задачи 
         if (tasks.length > 0) {
             this.ttFocus.textContent = tasks[0].textInput;
-            this.updateTotalDisplay(totalPomodoros)
+            this.updateTotalDisplay(totalPomodoros,totalCompletedPomodoros)
             document.querySelector(".total-quanty").style.display = "";
         } else {
             this.ttFocus.textContent = "Time to focus!"; 

@@ -1,11 +1,6 @@
 class Tasks {
   constructor() {
     this.inputWriteTask = document.querySelector(".input-task");
- 
-    this.correctCountPomodoros = document.querySelector(".correct-count-pomodoros1");
-    this.correctSpan = document.querySelector(".counter-tasks");
-    this.correctPlusBtn = document.querySelector(".correct-plus-btn");
-    this.correctMinusBtn = document.querySelector(".correct-minus-btn");
     this.loadTasks()
   }
 

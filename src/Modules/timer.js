@@ -21,11 +21,22 @@ class Timer {
   notifyObserver({minutes,seconds,percentComplete,type}) {
     this.observers.forEach(observer => {
       if (typeof observer.update === 'function') {
-        observer.update({ minutes, seconds, percentComplete, type});
+        observer.update(this.getReadableTime(this.timeLeft));
+        // observer.update({ minutes, seconds, percentComplete, type});
+        if (this.timeLeft === 0) {
+          observer.finish();
+        }
       } else {
         console.error('Observer without update method:', observer);
       }
     });
+  }
+
+  getReadableTime(timeLeft) {
+    const seconds = Math.floor(timeLeft / 1000);
+    const minutes = Math.floor(seconds / 60);
+
+    return { minutes, seconds };
   }
 
   //проверка на запуск таймера
@@ -34,14 +45,21 @@ class Timer {
   }
 
   start(milliseconds) {
-    if (this.timerInterval !== null) return;
+    if (this.isRunning()) return;
+
     this.totalTime = milliseconds;
-    this.elapsedTime = 0;
-    const { minutes, seconds } = this.convertTime(milliseconds);
-    this.minutes = minutes;
-    this.seconds = seconds;
+    this.timeLeft = this.totalTime;
+
     this.timerInterval = setInterval(() => {
-      this.tick();
+      this.timeLeft -= 1000;
+
+      if (this.timeLeft < 0) {
+        clearInterval(this.timerInterval);
+        return;
+      }
+
+      this.notifyObserver(this.timeLeft);
+
     }, 1000);
   }
 

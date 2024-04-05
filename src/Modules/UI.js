@@ -3,9 +3,11 @@ import  CONFIG, { POMODORO, SHORT_BREAK, LONG_BREAK }  from "../templates/config
 import { createTaskElement } from '../templates/createTask';
 
 export default class UI {
-   constructor(timer){
+   constructor(timer,state){
         this.timer = timer;
+        this.state = state;
         this.tasks = new Tasks()
+
         this.initializationDOMElements()
         this.addEventListener();
         this.tasks.loadTasks();
@@ -40,11 +42,10 @@ export default class UI {
         //хранить выбранную задачу
         this.activeTaskId = null;
         //дефолтная тема
-        this.currentTheme = POMODORO;
+        // this.currentTheme = POMODORO;
     }
 
     addEventListener(){
-        
         this.startBtn.addEventListener("click",  () =>{
             this.toggleTimer()
         });
@@ -333,47 +334,55 @@ export default class UI {
         const activeTask = this.tasks.savedTasks.find(task => task.id === this.activeTaskId);
         if (activeTask && activeTask.completedPomodoros >= activeTask.pomodoroCount) {
             alert("Достигнут лимит помидорок для этой задачи");
-            return; 
+            return;
         }
 
         if (!this.timer.isRunning()) {
-            const timeInMilliseconds = CONFIG[this.currentTheme].time;
+            const timeInMilliseconds = CONFIG[this.state.getTheme()].time;
             this.timer.start(timeInMilliseconds);
             this.startBtn.textContent = "PAUSE";
         } else {
             this.timer.stop();
             this.startBtn.textContent = "START";
             if (this.activeTaskId !== null) {
-                this.displayTasks(); 
+                this.displayTasks();
               }
         }
     }
 
     changeTheme(theme) {
         const themeConfig = CONFIG[theme];
-        this.currentTheme = theme;
-        this.body.classList.add(themeConfig.themeId);
-        const { minutes, seconds } = this.timer.convertTime(themeConfig.time);
-        this.timer.stop();
-        this.updateTimeDisplay( minutes,  seconds );
-        this.saveThemeAndTimeToLocalStorage();
+        if (themeConfig) {
+            // this.currentTheme = theme;
+            this.body.classList.remove(...this.body.classList);
+            this.body.classList.add(themeConfig.themeId);
+            const { minutes, seconds } = this.timer.convertTime(themeConfig.time);
+            this.timer.stop();
+            this.updateTimeDisplay( minutes,  seconds );
+            this.state.setTheme(theme);
+            this.saveThemeAndTimeToLocalStorage();
+        }
     }
 
     getThemeAndTimeFromLocalStorage(){
-        const savedThemeAndTime = JSON.parse(localStorage.getItem('themeAndTime'));
-        if (savedThemeAndTime && CONFIG.hasOwnProperty(savedThemeAndTime.theme)) {
-            this.changeTheme(savedThemeAndTime.theme);
-            } else {
-            //тема по умолчанию
-            this.changeTheme(POMODORO);
-            }
+        const theme = localStorage.getItem('theme');
+        this.changeTheme(theme);
+        // const savedThemeAndTime = JSON.parse(localStorage.getItem('themeAndTime'));
+        // if (savedThemeAndTime && CONFIG.hasOwnProperty(savedThemeAndTime.theme)) {
+        //     this.changeTheme(savedThemeAndTime.theme);
+        //     } else {
+        //     //тема по умолчанию
+        //     this.changeTheme(POMODORO);
+        //     }
     }
 
     saveThemeAndTimeToLocalStorage(){
-        localStorage.setItem('themeAndTime', JSON.stringify({
-            theme: this.currentTheme,
-            time: CONFIG[this.currentTheme].time
-          }));
+        console.log(this.state.getTheme());
+        localStorage.setItem('theme', this.state.getTheme());
+        // localStorage.setItem('themeAndTime', JSON.stringify({
+        //     theme: this.currentTheme,
+        //     time: CONFIG[this.currentTheme].time
+        //   }));
     }
 
     updateTimeDisplay(minutes, seconds) {
@@ -381,28 +390,39 @@ export default class UI {
             this.secondElem.textContent = seconds.toString().padStart(2, "0");
     }
     
-    update(data){
+    update({ minutes, seconds }){
+        console.log({ minutes, seconds });
+        this.updateTimeDisplay(minutes, seconds);
         //если время закончилось само обновляется таймер, кнопка и прогресс бар до начального состояния
         //'POMODORO_COMPLETE' метка для уведомления, что нужно выполнять все действия и if
-        if (data.type === 'POMODORO_COMPLETE') {
-            this.startBtn.textContent = "START";
-            const themeConfig = CONFIG[POMODORO];
-            const { minutes, seconds } = this.timer.convertTime(themeConfig.time);
-            this.updateTimeDisplay(minutes, seconds);
-            //сбросить прогрессбар
-            this.updateProgressBar(0); 
+        // if (data.type === 'POMODORO_COMPLETE') {
+        //     this.startBtn.textContent = "START";
+        //     const themeConfig = CONFIG[POMODORO];
+        //     const { minutes, seconds } = this.timer.convertTime(themeConfig.time);
+        //     this.updateTimeDisplay(minutes, seconds);
+        //     //сбросить прогрессбар
+        //     this.updateProgressBar(0); 
 
-            if (this.activeTaskId !== null) {
-                //oбновление использованных помидорок
-                this.tasks.handlePomodoroComplete(this.activeTaskId); 
-                this.displayTasks(); 
-            }
-            //метка для отображения времени
-        } else if (data.type === 'TICK') {
-            this.updateTimeDisplay(data.minutes, data.seconds);
-            this.updateProgressBar(data.percentComplete);
-        }
+        //     if (this.activeTaskId !== null) {
+        //         //oбновление использованных помидорок
+        //         this.tasks.handlePomodoroComplete(this.activeTaskId); 
+        //         this.displayTasks(); 
+        //     }
+        //     //метка для отображения времени
+        // } else if (data.type === 'TICK') {
+        //     this.updateTimeDisplay(data.minutes, data.seconds);
+        //     this.updateProgressBar(data.percentComplete);
+        // }
     }
+
+    finish() {
+        console.log('finish');
+        this.state.setNextTheme();
+        this.changeTheme(this.state.getTheme());
+        if (this.state.getSelectedTask()) {
+            // update html of this task
+        }
+     }
     //отсчет времени в прогресс бар
     updateProgressBar(percentComplete) {
         const progressBar = document.getElementById('progressBar');

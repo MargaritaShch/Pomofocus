@@ -1,43 +1,39 @@
 # Pomofocus
 
-## Описание:
+## Overview:
 
-Pomofocus — приложение для повышения продуктивности, которое помогает пользователям сосредоточиться на задачах, используя технику управления временем "Помодоро". Основная идея техники заключается в чередовании коротких перерывов и фокусированных временных промежутков работы.
-- **Таймер Помодоро**: Устанавливайте таймер на 25 минут для выполнения работы, после чего делайте 5-минутный перерыв. После четырех таких циклов рекомендуется делать более длительный перерыв.
-- **Список задач**: Добавляйте, удаляйте и отмечайте выполненные задачи.
+Pomofocus is a productivity application that helps users focus on tasks using the "Pomodoro" time management technique. The main idea of this technique is to alternate short breaks with focused work intervals.
+- **Pomodoro Timer**: Set a timer for 25 minutes of work, followed by a 5-minute break. After four such cycles, a longer break is recommended.
+- **Task List**: Add, delete, and mark tasks as completed.
 
 ## Stack:
-<ul align ="start">
-  <li>JavaScript + Modules </li>
-  <li>SCSS </li>
-  <li>HTML </li>
-</ul>
+- **JavaScript + Modules**
+- **SCSS**
+- **HTML**
 
-## Применение паттерна Observer:
+## Implementation of the Observer Pattern:
 
-Приложение "Помофокус" использует паттерн Observer для управления взаимодействием между компонентами приложения, такими как таймер, список задач и модуль статистики. Это позволяет им динамически реагировать на изменения состояния друг друга без необходимости тесной связи между компонентами.
+The Pomofocus application uses the Observer pattern to manage interactions between application components such as the timer, task list, and statistics module. This allows them to dynamically respond to each other's state changes without the need for tight coupling between components.
 
-### Как это работает:
+### How It Works:
 
-- **Таймер Помодоро** выступает в роли издателя (publisher), оповещая подписчиков о начале работы, перерыве и завершении цикла.
+- **Pomodoro Timer** acts as the publisher, notifying subscribers of the start of work, breaks, and the end of cycles.
 
-## Реализованные функции:
+## Features Implemented:
 
-- **Динамическое обновление интерфейса**: Интерфейс автоматически обновляется в ответ на изменения в таймере и список задач, благодаря использованию паттерна Observer.
-- **Сохранение задач**: Задачи сохраняются в `localStorage`, позволяя пользователям возвращаться к своему списку задач даже после перезагрузки страницы.
-- **Управление задачами**: Пользователи могут добавлять новые задачи, удалять их и отмечать выполненные, а также видеть количество успешно завершенных помодоро для каждой задачи.
-- **Кастомизация таймера**: Время работы, короткого и длинного перерыва может быть настроено через объект `CONFIG`.
-- **Переключение тем**: Пользователи могут переключаться между режимами работы, короткого и длинного перерыва, с визуальным отображением текущего состояния таймера.
-- **Прогресс бар**: Визуализация прогресса текущего помодоро или перерыва через прогресс бар.
+- **Dynamic Interface Update**: The interface automatically updates in response to changes in the timer and task list, thanks to the use of the Observer pattern.
+- **Task Persistence**: Tasks are saved in `localStorage`, allowing users to return to their task list even after reloading the page.
+- **Task Management**: Users can add new tasks, delete them, mark them as completed, and see the number of successfully completed pomodoros for each task.
+- **Timer Customization**: Work time, short break, and long break durations can be customized via the `CONFIG` object.
+- **Theme Switching**: Users can switch between work, short break, and long break modes, with visual indications of the current timer state.
+- **Progress Bar**: Visualize the progress of the current pomodoro or break with a progress bar.
 
-## Структура проекта:
+## Project Structure:
 
-Проект состоит из нескольких модулей:
-- `Timer.js`: Ответственен за логику таймера.
-- `UI.js`: Управляет всем пользовательским интерфейсом, включая отображение таймера, списка задач и обработку событий пользовательского ввода.
-- `Tasks.js`: Управляет созданием, хранением и обновлением задач.
-- `state.js`: Хранит состояние приложения, включая выбранную тему и текущий режим таймера.
-- `config.js`: Содержит настройки таймера для разных режимов (работа, короткий перерыв, длинный перерыв).
-- `createTask.js`: Функция для создания HTML-разметки задачи.
-
-
+The project consists of several modules:
+- `Timer.js`: Responsible for the timer logic.
+- `UI.js`: Manages the entire user interface, including displaying the timer, task list, and handling user input events.
+- `Tasks.js`: Manages the creation, storage, and updating of tasks.
+- `state.js`: Stores the application's state, including the selected theme and current timer mode.
+- `config.js`: Contains timer settings for different modes (work, short break, long break).
+- `createTask.js`: Function for creating task HTML markup.
